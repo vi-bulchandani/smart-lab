@@ -1,0 +1,5 @@
+env-sensing
+arduino-env
+__pycache__
+.vscode
+gc-cloud-functions
