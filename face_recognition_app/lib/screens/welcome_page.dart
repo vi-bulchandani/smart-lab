@@ -60,7 +60,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
                         }
                         else{
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage(email: userCredentials.user?.email,)));
                         }
                       }).catchError((err) {
                         print('ERROR: Unable to fetch user details');
