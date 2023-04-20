@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../main.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -52,11 +55,15 @@ class _WelcomePageState extends State<WelcomePage> {
                   print(userCredentials.user);
                   FirebaseFirestore db = FirebaseFirestore.instance;
                   final authorizedUser = db.collection('authorizedUsers').doc(userCredentials.user?.email);
-                  authorizedUser.get().then((DocumentSnapshot documentSnapshot) {
+                  authorizedUser.get().then((DocumentSnapshot documentSnapshot) async{
                     if(documentSnapshot.exists){
                       final user = db.collection('registeredUsers').doc(userCredentials.user?.email);
-                      user.get().then((DocumentSnapshot userDocumentSnapshot) {
+                      user.get().then((DocumentSnapshot userDocumentSnapshot) async{
                         if(userDocumentSnapshot.exists){
+                          final userData = userDocumentSnapshot.data() as Map<String, dynamic>;
+                          name = userData['name'];
+                          final SharedPreferences prefs = await SharedPreferences.getInstance();
+                          prefs.setString('name', name);
                           Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
                         }
                         else{

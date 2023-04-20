@@ -44,6 +44,7 @@ dependencies:
   cloud_functions: ^4.1.1
   google_sign_in: ^6.1.0
   image_picker: ^0.8.7+3
+  shared_preferences: ^2.1.0
 
 dev_dependencies:
   flutter_test:

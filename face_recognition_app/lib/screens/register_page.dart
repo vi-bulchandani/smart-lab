@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPage extends StatefulWidget {
 
@@ -75,7 +76,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         print('ERROR: ' + err.toString());
                       });
                     }
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                    final SharedPreferences prefs = await SharedPreferences.getInstance();
+                    prefs.setString('email', this.widget.name);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(name: this.widget.name,)));
                   }).catchError((err) {
                     print('ERROR: Unable to upload user data');
                     print('ERROR: ' + err.toString());

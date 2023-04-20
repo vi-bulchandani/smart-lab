@@ -1,6 +1,8 @@
+import 'package:face_recognition_app/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screens/welcome_page.dart';
 
@@ -9,8 +11,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  name = prefs.getString('name');
   runApp(const MyApp());
 }
+
+dynamic name = null;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -32,7 +38,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: WelcomePage(),
+      home: (name == null) ? WelcomePage() : HomePage(),
     );
   }
 }
