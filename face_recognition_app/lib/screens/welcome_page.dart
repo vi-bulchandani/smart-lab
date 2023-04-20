@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:face_recognition_app/screens/home_page.dart';
+import 'package:face_recognition_app/screens/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -48,7 +50,30 @@ class _WelcomePageState extends State<WelcomePage> {
                   print(userCredentials.user?.email);
                   print(userCredentials.user?.displayName);
                   print(userCredentials.user);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                  FirebaseFirestore db = FirebaseFirestore.instance;
+                  final authorizedUser = db.collection('authorizedUsers').doc(userCredentials.user?.email);
+                  authorizedUser.get().then((DocumentSnapshot documentSnapshot) {
+                    if(documentSnapshot.exists){
+                      final user = db.collection('registeredUsers').doc(userCredentials.user?.email);
+                      user.get().then((DocumentSnapshot userDocumentSnapshot) {
+                        if(userDocumentSnapshot.exists){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                        }
+                        else{
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()));
+                        }
+                      }).catchError((err) {
+                        print('ERROR: Unable to fetch user details');
+                        print('ERROR: ' + err.toString());
+                      });
+                    }
+                    else{
+                      print('ERROR: You are not authorized to use the Smart Lab');
+                    }
+                  }).catchError((err) {
+                    print('ERROR: Unable to fetch user details');
+                    print('ERROR: ' + err.toString());
+                  });
                 });
               },
             )
