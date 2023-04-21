@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:face_recognition_app/main.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class RegisterPage extends StatefulWidget {
 
@@ -30,7 +32,10 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox.expand(
+      body: (isLoading) ? SpinKitDoubleBounce(
+        color: Colors.red,
+        size: 48.0,
+      ) : SizedBox.expand(
         child: Stepper(
           currentStep: _state,
           onStepCancel: (){
@@ -61,6 +66,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   }
                 }
                 if(this.widget.name != '' && this.widget.mobileNumber != '' && allUploaded){
+                  setState(() {
+                    isLoading = true;
+                  });
                   FirebaseFirestore db = FirebaseFirestore.instance;
                   db.collection('registeredUsers').doc(this.widget.email).set({
                     'name': this.widget.name,
@@ -72,14 +80,23 @@ class _RegisterPageState extends State<RegisterPage> {
                       await FirebaseStorage.instance.ref().child('${this.widget.email}/${imageName}').putFile(images[i]).then((p0) {
                         print('INFO: Image ' + (i+1).toString() + ' is uploaded successfully');
                       }).catchError((err) {
+                        setState(() {
+                          isLoading = false;
+                        });
                         print('ERROR: Unable to upload user image ' + (i+1).toString());
                         print('ERROR: ' + err.toString());
                       });
                     }
                     final SharedPreferences prefs = await SharedPreferences.getInstance();
                     prefs.setString('name', this.widget.name);
+                    setState(() {
+                      isLoading = false;
+                    });
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(name: this.widget.name,)));
                   }).catchError((err) {
+                    setState(() {
+                      isLoading = false;
+                    });
                     print('ERROR: Unable to upload user data');
                     print('ERROR: ' + err.toString());
                   });

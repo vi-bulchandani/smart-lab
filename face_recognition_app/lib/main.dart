@@ -17,6 +17,7 @@ void main() async {
 }
 
 dynamic name = null;
+bool isLoading = false;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
