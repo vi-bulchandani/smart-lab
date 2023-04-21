@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: (name == null) ? WelcomePage() : HomePage(),
+      home: (name == null) ? WelcomePage() : HomePage(name: name.toString(),),
     );
   }
 }

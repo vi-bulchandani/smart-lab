@@ -64,7 +64,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           name = userData['name'];
                           final SharedPreferences prefs = await SharedPreferences.getInstance();
                           prefs.setString('name', name);
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(name: name.toString(),)));
                         }
                         else{
                           Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage(email: userCredentials.user?.email,)));

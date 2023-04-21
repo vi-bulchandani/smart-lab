@@ -77,8 +77,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       });
                     }
                     final SharedPreferences prefs = await SharedPreferences.getInstance();
-                    prefs.setString('email', this.widget.name);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(name: this.widget.name,)));
+                    prefs.setString('name', this.widget.name);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(name: this.widget.name,)));
                   }).catchError((err) {
                     print('ERROR: Unable to upload user data');
                     print('ERROR: ' + err.toString());
