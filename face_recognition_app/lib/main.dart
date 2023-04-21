@@ -18,6 +18,7 @@ void main() async {
 
 dynamic name = null;
 bool isLoading = false;
+String thingspeakUrl = 'https://thingspeak.com/channels/2098172';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

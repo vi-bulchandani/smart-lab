@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
@@ -22,14 +24,45 @@ class _HomePageState extends State<HomePage> {
 
   int _selectedPage = 0;
 
-  //Update Images Parameters
-  int _state = 0;
-  late List<File> images = List<File>.filled(10, File(''));
-  List<bool> isUploaded = List<bool>.filled(10, false);
-  final ImagePicker picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
+
+    // Update Images Parameters
+    int _state = 0;
+    late List<File> images = List<File>.filled(10, File(''));
+    List<bool> isUploaded = List<bool>.filled(10, false);
+    final ImagePicker picker = ImagePicker();
+
+    // Live Environment Parameters
+    final webviewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(Color(0x00000000))
+      ..setNavigationDelegate(
+          NavigationDelegate(
+              onProgress: (int progress){
+                print('INFO: Progress ' + progress.toString());
+              },
+              onPageStarted: (String url){
+                setState(() {
+                  isLoading = false;
+                });
+              },
+              onPageFinished: (String url){
+                setState(() {
+                  isLoading = false;
+                });
+              },
+              onWebResourceError: (WebResourceError err){
+                print('ERROR: ' + err.toString());
+              },
+              onNavigationRequest: (NavigationRequest request){
+                return NavigationDecision.prevent;
+              }
+          )
+      )
+      ..loadRequest(Uri.parse(thingspeakUrl));
+
 
     List<Widget> pages = [
       Stepper(
@@ -386,10 +419,14 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      Container(
-        child: Text(
-            'Page 2'
-        ),
+      Stack(
+        children: [
+          WebViewWidget(controller: webviewController),
+          (isLoading) ? SpinKitDoubleBounce(
+            color: Colors.red,
+            size: 48.0,
+          ) : Stack(),
+        ],
       ),
       Container(
         child: Text(
@@ -431,6 +468,9 @@ class _HomePageState extends State<HomePage> {
         onTap: (index) {
           setState(() {
             _selectedPage = index;
+            if(index == 1){
+              isLoading = true;
+            }
           });
         },
         items: [
