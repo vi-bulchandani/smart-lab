@@ -13,10 +13,12 @@ void main() async {
   );
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   name = prefs.getString('name');
+  email = prefs.getString('email');
   runApp(const MyApp());
 }
 
 dynamic name = null;
+dynamic email = null;
 bool isLoading = false;
 String thingspeakUrl = 'https://thingspeak.com/channels/2098172';
 
@@ -40,7 +42,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: (name == null) ? WelcomePage() : HomePage(name: name.toString(),),
+      home: (email == null) ? WelcomePage() : HomePage(name: name.toString(), email: email.toString(),),
     );
   }
 }

@@ -62,9 +62,11 @@ class _WelcomePageState extends State<WelcomePage> {
                         if(userDocumentSnapshot.exists){
                           final userData = userDocumentSnapshot.data() as Map<String, dynamic>;
                           name = userData['name'];
+                          email = userCredentials.user?.email;
                           final SharedPreferences prefs = await SharedPreferences.getInstance();
                           prefs.setString('name', name);
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(name: name.toString(),)));
+                          prefs.setString('email', email);
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(name: name.toString(), email: email.toString(),)));
                         }
                         else{
                           Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage(email: userCredentials.user?.email,)));

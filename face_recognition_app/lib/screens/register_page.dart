@@ -87,12 +87,15 @@ class _RegisterPageState extends State<RegisterPage> {
                         print('ERROR: ' + err.toString());
                       });
                     }
+                    name = this.widget.name;
+                    email = this.widget.email;
                     final SharedPreferences prefs = await SharedPreferences.getInstance();
-                    prefs.setString('name', this.widget.name);
+                    prefs.setString('name', name.toString());
+                    prefs.setString('email', email.toString());
                     setState(() {
                       isLoading = false;
                     });
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(name: this.widget.name,)));
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(name: name.toString(), email: email.toString(),)));
                   }).catchError((err) {
                     setState(() {
                       isLoading = false;

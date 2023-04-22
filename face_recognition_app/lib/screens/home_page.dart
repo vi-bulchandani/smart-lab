@@ -13,8 +13,9 @@ import 'dart:io';
 class HomePage extends StatefulWidget {
 
   String name;
+  String email;
 
-  HomePage({this.name = ''});
+  HomePage({this.name = '', this.email = ''});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -439,6 +440,9 @@ class _HomePageState extends State<HomePage> {
         ),
       )
     ];
+
+    print('${this.widget.name}, ${name}');
+    print('${this.widget.email}, ${email}');
 
     return Scaffold(
       appBar: AppBar(
