@@ -106,7 +106,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 }
                 else{
                   print('ERROR: Enter all details and 10 pictures to proceed');
-                  _state--;
+                  _state = 10;
                 }
               }
             }
