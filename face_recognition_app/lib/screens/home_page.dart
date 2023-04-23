@@ -1,5 +1,6 @@
 import 'package:face_recognition_app/screens/welcome_page.dart';
 import 'package:face_recognition_app/main.dart';
+import 'package:face_recognition_app/models/thingspeak_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
+
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -29,6 +32,33 @@ class _HomePageState extends State<HomePage> {
   List<bool> isUploaded = List<bool>.filled(10, false);
   final ImagePicker picker = ImagePicker();
 
+  // Live Environment Parameters
+  late ZoomPanBehavior _zoomPanBehavior;
+  late TrackballBehavior _trackballBehavior;
+
+  @override
+  void initState() {
+
+    _zoomPanBehavior = ZoomPanBehavior(
+      enablePinching: true,
+      enableDoubleTapZooming: true
+    );
+
+    _trackballBehavior = TrackballBehavior(
+      enable: true,
+      tooltipSettings: InteractiveTooltip(
+        enable: true,
+        color: Colors.red,
+          format: 'point.x : point.y%'
+      ),
+      tooltipDisplayMode: TrackballDisplayMode.floatAllPoints,
+      tooltipAlignment: ChartAlignment.near,
+      activationMode: ActivationMode.longPress
+    );
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -36,7 +66,8 @@ class _HomePageState extends State<HomePage> {
       (isLoading) ? SpinKitDoubleBounce(
         color: Colors.red,
         size: 48.0,
-      ) : Stepper(
+      ) :
+      Stepper(
         currentStep: _state,
         onStepCancel: (){
           if (_state > 0) {
@@ -395,12 +426,144 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      Stack(
+      (isLoading) ? SpinKitDoubleBounce(
+        color: Colors.red,
+        size: 48.0,
+      ) :
+      ListView(
+        // shrinkWrap: true,
         children: [
-          (isLoading) ? SpinKitDoubleBounce(
-            color: Colors.red,
-            size: 48.0,
-          ) : Stack(),
+          Container(
+            height: MediaQuery.of(context).size.height / 4,
+            child: SfCartesianChart(
+              primaryXAxis: CategoryAxis(
+                title: AxisTitle(
+                  text: 'Timestamp'
+                )
+              ),
+              primaryYAxis: NumericAxis(
+                title: AxisTitle(
+                  text: 'CO (ppm)'
+                )
+              ),
+              zoomPanBehavior: _zoomPanBehavior,
+              trackballBehavior: _trackballBehavior,
+              margin: EdgeInsets.all(24.0),
+              series: [
+                LineSeries(
+                  dataSource: data,
+                  xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
+                  yValueMapper: (ThingspeakData info, _) => info.field1
+                )
+              ],
+            ),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height / 4,
+            child: SfCartesianChart(
+              primaryXAxis: CategoryAxis(
+                  title: AxisTitle(
+                      text: 'Timestamp'
+                  )
+              ),
+              primaryYAxis: NumericAxis(
+                  title: AxisTitle(
+                      text: 'MQ5 (ppm)'
+                  )
+              ),
+              zoomPanBehavior: _zoomPanBehavior,
+              trackballBehavior: _trackballBehavior,
+              margin: EdgeInsets.all(24.0),
+              series: [
+                LineSeries(
+                    dataSource: data,
+                    xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
+                    yValueMapper: (ThingspeakData info, _) => info.field2
+                )
+              ],
+            ),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height / 4,
+            child: SfCartesianChart(
+              primaryXAxis: CategoryAxis(
+                  title: AxisTitle(
+                      text: 'Timestamp'
+                  )
+              ),
+              primaryYAxis: NumericAxis(
+                  title: AxisTitle(
+                      text: 'Temperature (in Celcius)',
+                    textStyle: TextStyle(
+                      fontSize: 8.0
+                    )
+                  )
+              ),
+              zoomPanBehavior: _zoomPanBehavior,
+              trackballBehavior: _trackballBehavior,
+              margin: EdgeInsets.all(24.0),
+              series: [
+                LineSeries(
+                    dataSource: data,
+                    xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
+                    yValueMapper: (ThingspeakData info, _) => info.field3
+                )
+              ],
+            ),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height / 4,
+            child: SfCartesianChart(
+              primaryXAxis: CategoryAxis(
+                  title: AxisTitle(
+                      text: 'Timestamp'
+                  )
+              ),
+              primaryYAxis: NumericAxis(
+                  title: AxisTitle(
+                      text: 'Humidity (in percentage)',
+                    textStyle: TextStyle(
+                      fontSize: 8.0
+                    )
+                  )
+              ),
+              zoomPanBehavior: _zoomPanBehavior,
+              trackballBehavior: _trackballBehavior,
+              margin: EdgeInsets.all(24.0),
+              series: [
+                LineSeries(
+                    dataSource: data,
+                    xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
+                    yValueMapper: (ThingspeakData info, _) => info.field4
+                )
+              ],
+            ),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height / 4,
+            child: SfCartesianChart(
+              primaryXAxis: CategoryAxis(
+                  title: AxisTitle(
+                      text: 'Timestamp'
+                  )
+              ),
+              primaryYAxis: NumericAxis(
+                  title: AxisTitle(
+                      text: 'Flap State'
+                  )
+              ),
+              zoomPanBehavior: _zoomPanBehavior,
+              trackballBehavior: _trackballBehavior,
+              margin: EdgeInsets.all(24.0),
+              series: [
+                LineSeries(
+                    dataSource: data,
+                    xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
+                    yValueMapper: (ThingspeakData info, _) => info.field5
+                )
+              ],
+            ),
+          ),
         ],
       ),
       Container(
@@ -420,8 +583,23 @@ class _HomePageState extends State<HomePage> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon:
-            Icon(
+            icon: Icon(
+              Icons.refresh_rounded,
+            ),
+            onPressed: () async {
+              if(_selectedPage == 1){
+                setState(() {
+                  isLoading = true;
+                });
+                await getData();
+                setState(() {
+                  isLoading = false;
+                });
+              }
+            },
+          ),
+          IconButton(
+            icon: Icon(
               Icons.logout_rounded,
             ),
             onPressed: () async {
@@ -440,13 +618,26 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.shifting,
         currentIndex: _selectedPage,
-        onTap: (index) {
+        onTap: (index) async{
           setState(() {
+            isLoading = false;
             _selectedPage = index;
-            if(index == 1){
-              isLoading = true;
-            }
           });
+
+          if(index == 1){
+            setState(() {
+              isLoading = true;
+            });
+            await getData().catchError((err) {
+              print('ERR: ' + err.toString());
+              setState(() {
+                isLoading = false;
+              });
+            });
+            setState(() {
+              isLoading = false;
+            });
+          }
         },
         items: [
           BottomNavigationBarItem(
