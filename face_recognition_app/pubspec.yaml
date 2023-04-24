@@ -48,6 +48,10 @@ dependencies:
   flutter_spinkit: ^5.1.0
   http: ^0.13.5
   syncfusion_flutter_charts: ^21.1.41
+  google_mlkit_face_detection: ^0.6.0
+  image: ^4.0.15
+  path_provider: ^2.0.14
+  tflite_flutter: ^0.9.1
 
 dev_dependencies:
   flutter_test:
@@ -72,9 +76,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/mobilefacenet.tflite
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:face_recognition_app/screens/welcome_page.dart';
 import 'package:face_recognition_app/main.dart';
-import 'package:face_recognition_app/models/thingspeak_data.dart';
+import 'package:face_recognition_app/services/face_recognition.dart';
+import 'package:face_recognition_app/services/sign_up_service.dart';
+import 'package:face_recognition_app/services/thingspeak_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,7 +11,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
-
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class HomePage extends StatefulWidget {
@@ -113,13 +115,25 @@ class _HomePageState extends State<HomePage> {
                     print('ERROR: ' + err.toString());
                   });
                 }
-                setState(() {
-                  isLoading = false;
-                  for(int i=0; i<10; i++){
-                    isUploaded[i] = false;
-                  }
-                  _state = 0;
+                final FaceRecognitionService faceRecognitionService = await signUp(images);
+                FirebaseFirestore.instance.collection('faces').doc('details').set({
+                  this.widget.email.toString(): faceRecognitionService.faceVector
+                }, SetOptions(merge: true)).then((value) {
+                  setState(() {
+                    isLoading = false;
+                    for(int i=0; i<10; i++){
+                      isUploaded[i] = false;
+                    }
+                    _state = 0;
+                  });
+                }).catchError((err) {
+                  setState(() {
+                    isLoading = false;
+                  });
+                  print('ERROR: Unable to upload face vector');
+                  print('ERROR: ' + err.toString());
                 });
+
               }
               else{
                 print('ERROR: Enter all details and 10 pictures to proceed');

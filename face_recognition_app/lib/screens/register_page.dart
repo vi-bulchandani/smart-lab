@@ -7,6 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:face_recognition_app/main.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:face_recognition_app/services/sign_up_service.dart';
+import 'package:face_recognition_app/services/face_recognition.dart';
 
 class RegisterPage extends StatefulWidget {
 
@@ -92,10 +94,21 @@ class _RegisterPageState extends State<RegisterPage> {
                     final SharedPreferences prefs = await SharedPreferences.getInstance();
                     prefs.setString('name', name.toString());
                     prefs.setString('email', email.toString());
-                    setState(() {
-                      isLoading = false;
+                    final FaceRecognitionService faceRecognitionService = await signUp(images);
+                    db.collection('faces').doc('details').set({
+                      this.widget.email.toString(): faceRecognitionService.faceVector
+                    }, SetOptions(merge: true)).then((value) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(name: name.toString(), email: email.toString(),)));
+                    }).catchError((err) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                      print('ERROR: Unable to upload face vector');
+                      print('ERROR: ' + err.toString());
                     });
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(name: name.toString(), email: email.toString(),)));
                   }).catchError((err) {
                     setState(() {
                       isLoading = false;
