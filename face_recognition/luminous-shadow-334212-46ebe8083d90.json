@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "luminous-shadow-334212",
+  "private_key_id": "46ebe8083d90dbca12aec071d0e1ed99eebdddf4",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC+ot2nxNvckshi\nMCM79Hu3zyOnHEkbeXbM0gGVCwSjIgTskQkLqOztSd+IVEo4OpKfhA7r4Ktn6RND\nr4TAgQkCYrBeoHZGSs2FFgmK9SF6DoaUIPny/nVsgmP6p9S+80WL2SnFbhtiJpMR\n4et5VVoY9sXc3quTSuEGvFzQJmkz5NOyHq8JzNPUDneB+Q+TZwJdcGfP+Y/SAiEJ\naQx4H5OudlNgUTKVZ5nBssUKMWcpXxJw5rY/dpRt8suArGe4tUKYeow9aAsW6Wf/\ngCEho3JH5orUrcBPlRfmJeMLdRSqhaVkqs8h+aE7jMZoG2OxcrU+d7VlwHlSjKrC\nJ4FEnR2zAgMBAAECggEAUBchk4HvssgSGrpJmz84GP2T53nJNxs9L4jNNF5IKPc6\nZV77k2P5gimGmYJ8Ggp1nkG/eRbPPF0eBFJBrhSoAdIPcfntJtP3a0HaaYBZ+6sN\nnD8Mc6u3DorrURvglAalgb8PPwxmwcIeCKXHJZcXvqQydXwxTjTnvEo3nhV9Hlj5\nipt0nVfr5H9xWVQ4cxzz2UaR++IFtFjnfVDel/BwUgoDTJC/MA/M80pTkXQOrz7G\nv7IEWeqqRgcZTSaHJszhj2CPMC1RwYcj1bNcQsndUoTN4o0sJ2FxITjaCXIVjK+W\nP2gU2nmlZV5H3N/Qm0D/1TO/ubu5oxzpvPxqL6CZyQKBgQD/VkytPaT2bunXJSsC\n58nnxgR5dzdMDM0IbLfOQ1/PHYSCM6TLcMA0h9VhplL4rex6E/OQ96ZBrX1N9dZg\nX7r6yN6mtTvLXT2r5mvJggwkxxHTkILdUP4IFTS+Xkbi+YGe/KEAsC8lKR/P2yTJ\nIYccHA+0v8PL1s8pk4O3n66Z+QKBgQC/IZCyjMNi5wZrXgzVr1fO2FpxterxDwMV\nwXA9Dz8K4qjYV6SEG4TZdhC0NCRsgh6AaFw+EtlRK1x2YEbxTd3UpX5e9pMOEAxM\nR6ZwO7MHFBLkFAS9nyNqhNz5WJyLb4VgSufFAIjulUatabkeKX/ypsJZfkuaWs6e\nWHbgvCCACwKBgQDnLnLEE+EtAmUUV2GnAsgq4n2goFDfuWNWMmEFDrlLY/VakXmu\nfMp5hVasUBQldgt6yF+prJ/KLVMbZ+8OWP6JG5+Dnumhii1RW5HR474s+lRokhn6\nWd924AReLCvQS4mRsjfv0JUO9zoHTunydTnIOJv70fhrsXTlttr2QUyruQKBgQCe\n6e9/JR6HKwLhXm9Zc9KUPrrkdJcFGrA79Hu3qOeHy3ELf8Nfu+m3TT0SN5BZT87A\ngQTA77cUj/Lu0ZnqpA1e8sKhfm5CcQFoouI1ys1Ng1k5nZNbfedad2GrSAvQu0aw\nC1etKoavqBn9sTujYmnpfNF2y1Vc30ePzIn6zTBQhQKBgAw8OKawwwGEuYrKQoYs\nZwoUqsQQNE3ZmJRkazXz+GigvifHlvYsYXRTeIxnBR3/7qusXGGxIAxHRgi7ffxM\ngZSHdligwD1PfmYrYrHCho1+vy7LTUaTC5R4Hm5Po8O2K2K7z8kbzBwCc86krEn/\nyX9vonrnGRqKl6z1tftjGMsA\n-----END PRIVATE KEY-----\n",
+  "client_email": "firestore-retriever@luminous-shadow-334212.iam.gserviceaccount.com",
+  "client_id": "110869565489710080746",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firestore-retriever%40luminous-shadow-334212.iam.gserviceaccount.com"
+}
