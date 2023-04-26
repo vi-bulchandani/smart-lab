@@ -55,19 +55,19 @@ class _RegisterPageState extends State<RegisterPage> {
             }
           },
           onStepContinue: () {
-            if (_state <= 10) {
+            if (_state <= 1) {
               setState(() {
                 _state += 1;
               });
-              if(_state == 11){
+              if(_state == 2){
                 _state--;
-                bool allUploaded = true;
-                for(bool b in isUploaded){
-                  if(!b){
-                    allUploaded = false;
-                  }
-                }
-                if(this.widget.name != '' && this.widget.mobileNumber != '' && allUploaded){
+                // bool allUploaded = true;
+                // for(bool b in isUploaded){
+                //   if(!b){
+                //     allUploaded = false;
+                //   }
+                // }
+                if(this.widget.name != '' && this.widget.mobileNumber != '' && isUploaded[0]){
                   setState(() {
                     isLoading = true;
                   });
@@ -77,7 +77,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     'mobile': this.widget.mobileNumber,
                     'email': this.widget.email
                   }).then((value) async {
-                    for(int i=0; i<10; i++){
+                    for(int i=0; i<1; i++){
                       String imageName = 'image'+(i+1).toString()+'.jpg';
                       await FirebaseStorage.instance.ref().child('${this.widget.email}/${imageName}').putFile(images[i]).then((p0) {
                         print('INFO: Image ' + (i+1).toString() + ' is uploaded successfully');
@@ -119,7 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 }
                 else{
                   print('ERROR: Enter all details and 10 pictures to proceed');
-                  _state = 10;
+                  _state = 1;
                 }
               }
             }
@@ -180,7 +180,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
             Step(
-              title: Text('Photo 1'),
+              title: Text('Photo'),
               content: (!isUploaded[0]) ? Container(
                 child: IconButton(
                   icon: Icon(
@@ -208,267 +208,267 @@ class _RegisterPageState extends State<RegisterPage> {
                 )
               ),
             ),
-            Step(
-              title: Text('Photo 2'),
-              content: (!isUploaded[1]) ? Container(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.camera_alt_rounded,
-                  ),
-                  iconSize: 48,
-                  onPressed: () async {
-                    try{
-                      final pickedFile = await picker.getImage(
-                          source: ImageSource.camera,
-                          maxHeight: 300.0
-                      );
-                      setState(() {
-                        images[1] = File(pickedFile!.path);
-                        isUploaded[1] = true;
-                      });
-                    } catch (err) {
-                      print('ERROR: ' + err.toString());
-                    }
-                  },
-                ),
-              ) : Container(
-                  child: Image(
-                    image: FileImage(images[1]),
-                  )
-              ),
-            ),
-            Step(
-              title: Text('Photo 3'),
-              content: (!isUploaded[2]) ? Container(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.camera_alt_rounded,
-                  ),
-                  iconSize: 48,
-                  onPressed: () async {
-                    try{
-                      final pickedFile = await picker.getImage(
-                          source: ImageSource.camera,
-                          maxHeight: 300.0
-                      );
-                      setState(() {
-                        images[2] = File(pickedFile!.path);
-                        isUploaded[2] = true;
-                      });
-                    } catch (err) {
-                      print('ERROR: ' + err.toString());
-                    }
-                  },
-                ),
-              ) : Container(
-                  child: Image(
-                    image: FileImage(images[2]),
-                  )
-              ),
-            ),
-            Step(
-              title: Text('Photo 4'),
-              content: (!isUploaded[3]) ? Container(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.camera_alt_rounded,
-                  ),
-                  iconSize: 48,
-                  onPressed: () async {
-                    try{
-                      final pickedFile = await picker.getImage(
-                          source: ImageSource.camera,
-                          maxHeight: 300.0
-                      );
-                      setState(() {
-                        images[3] = File(pickedFile!.path);
-                        isUploaded[3] = true;
-                      });
-                    } catch (err) {
-                      print('ERROR: ' + err.toString());
-                    }
-                  },
-                ),
-              ) : Container(
-                  child: Image(
-                    image: FileImage(images[3]),
-                  )
-              ),
-            ),
-            Step(
-              title: Text('Photo 5'),
-              content: (!isUploaded[4]) ? Container(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.camera_alt_rounded,
-                  ),
-                  iconSize: 48,
-                  onPressed: () async {
-                    try{
-                      final pickedFile = await picker.getImage(
-                          source: ImageSource.camera,
-                          maxHeight: 300.0
-                      );
-                      setState(() {
-                        images[4] = File(pickedFile!.path);
-                        isUploaded[4] = true;
-                      });
-                    } catch (err) {
-                      print('ERROR: ' + err.toString());
-                    }
-                  },
-                ),
-              ) : Container(
-                  child: Image(
-                    image: FileImage(images[4]),
-                  )
-              ),
-            ),
-            Step(
-              title: Text('Photo 6'),
-              content: (!isUploaded[5]) ? Container(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.camera_alt_rounded,
-                  ),
-                  iconSize: 48,
-                  onPressed: () async {
-                    try{
-                      final pickedFile = await picker.getImage(
-                          source: ImageSource.camera,
-                          maxHeight: 300.0
-                      );
-                      setState(() {
-                        images[5] = File(pickedFile!.path);
-                        isUploaded[5] = true;
-                      });
-                    } catch (err) {
-                      print('ERROR: ' + err.toString());
-                    }
-                  },
-                ),
-              ) : Container(
-                  child: Image(
-                    image: FileImage(images[5]),
-                  )
-              ),
-            ),
-            Step(
-              title: Text('Photo 7'),
-              content: (!isUploaded[6]) ? Container(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.camera_alt_rounded,
-                  ),
-                  iconSize: 48,
-                  onPressed: () async {
-                    try{
-                      final pickedFile = await picker.getImage(
-                          source: ImageSource.camera,
-                          maxHeight: 300.0
-                      );
-                      setState(() {
-                        images[6] = File(pickedFile!.path);
-                        isUploaded[6] = true;
-                      });
-                    } catch (err) {
-                      print('ERROR: ' + err.toString());
-                    }
-                  },
-                ),
-              ) : Container(
-                  child: Image(
-                    image: FileImage(images[6]),
-                  )
-              ),
-            ),
-            Step(
-              title: Text('Photo 8'),
-              content: (!isUploaded[7]) ? Container(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.camera_alt_rounded,
-                  ),
-                  iconSize: 48,
-                  onPressed: () async {
-                    try{
-                      final pickedFile = await picker.getImage(
-                          source: ImageSource.camera,
-                          maxHeight: 300.0
-                      );
-                      setState(() {
-                        images[7] = File(pickedFile!.path);
-                        isUploaded[7] = true;
-                      });
-                    } catch (err) {
-                      print('ERROR: ' + err.toString());
-                    }
-                  },
-                ),
-              ) : Container(
-                  child: Image(
-                    image: FileImage(images[7]),
-                  )
-              ),
-            ),
-            Step(
-              title: Text('Photo 9'),
-              content: (!isUploaded[8]) ? Container(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.camera_alt_rounded,
-                  ),
-                  iconSize: 48,
-                  onPressed: () async {
-                    try{
-                      final pickedFile = await picker.getImage(
-                          source: ImageSource.camera,
-                          maxHeight: 300.0
-                      );
-                      setState(() {
-                        images[8] = File(pickedFile!.path);
-                        isUploaded[8] = true;
-                      });
-                    } catch (err) {
-                      print('ERROR: ' + err.toString());
-                    }
-                  },
-                ),
-              ) : Container(
-                  child: Image(
-                    image: FileImage(images[8]),
-                  )
-              ),
-            ),
-            Step(
-              title: Text('Photo 10'),
-              content: (!isUploaded[9]) ? Container(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.camera_alt_rounded,
-                  ),
-                  iconSize: 48,
-                  onPressed: () async {
-                    try{
-                      final pickedFile = await picker.getImage(
-                          source: ImageSource.camera,
-                          maxHeight: 300.0
-                      );
-                      setState(() {
-                        images[9] = File(pickedFile!.path);
-                        isUploaded[9] = true;
-                      });
-                    } catch (err) {
-                      print('ERROR: ' + err.toString());
-                    }
-                  },
-                ),
-              ) : Container(
-                  child: Image(
-                    image: FileImage(images[9]),
-                  )
-              ),
-            )
+            // Step(
+            //   title: Text('Photo 2'),
+            //   content: (!isUploaded[1]) ? Container(
+            //     child: IconButton(
+            //       icon: Icon(
+            //         Icons.camera_alt_rounded,
+            //       ),
+            //       iconSize: 48,
+            //       onPressed: () async {
+            //         try{
+            //           final pickedFile = await picker.getImage(
+            //               source: ImageSource.camera,
+            //               maxHeight: 300.0
+            //           );
+            //           setState(() {
+            //             images[1] = File(pickedFile!.path);
+            //             isUploaded[1] = true;
+            //           });
+            //         } catch (err) {
+            //           print('ERROR: ' + err.toString());
+            //         }
+            //       },
+            //     ),
+            //   ) : Container(
+            //       child: Image(
+            //         image: FileImage(images[1]),
+            //       )
+            //   ),
+            // ),
+            // Step(
+            //   title: Text('Photo 3'),
+            //   content: (!isUploaded[2]) ? Container(
+            //     child: IconButton(
+            //       icon: Icon(
+            //         Icons.camera_alt_rounded,
+            //       ),
+            //       iconSize: 48,
+            //       onPressed: () async {
+            //         try{
+            //           final pickedFile = await picker.getImage(
+            //               source: ImageSource.camera,
+            //               maxHeight: 300.0
+            //           );
+            //           setState(() {
+            //             images[2] = File(pickedFile!.path);
+            //             isUploaded[2] = true;
+            //           });
+            //         } catch (err) {
+            //           print('ERROR: ' + err.toString());
+            //         }
+            //       },
+            //     ),
+            //   ) : Container(
+            //       child: Image(
+            //         image: FileImage(images[2]),
+            //       )
+            //   ),
+            // ),
+            // Step(
+            //   title: Text('Photo 4'),
+            //   content: (!isUploaded[3]) ? Container(
+            //     child: IconButton(
+            //       icon: Icon(
+            //         Icons.camera_alt_rounded,
+            //       ),
+            //       iconSize: 48,
+            //       onPressed: () async {
+            //         try{
+            //           final pickedFile = await picker.getImage(
+            //               source: ImageSource.camera,
+            //               maxHeight: 300.0
+            //           );
+            //           setState(() {
+            //             images[3] = File(pickedFile!.path);
+            //             isUploaded[3] = true;
+            //           });
+            //         } catch (err) {
+            //           print('ERROR: ' + err.toString());
+            //         }
+            //       },
+            //     ),
+            //   ) : Container(
+            //       child: Image(
+            //         image: FileImage(images[3]),
+            //       )
+            //   ),
+            // ),
+            // Step(
+            //   title: Text('Photo 5'),
+            //   content: (!isUploaded[4]) ? Container(
+            //     child: IconButton(
+            //       icon: Icon(
+            //         Icons.camera_alt_rounded,
+            //       ),
+            //       iconSize: 48,
+            //       onPressed: () async {
+            //         try{
+            //           final pickedFile = await picker.getImage(
+            //               source: ImageSource.camera,
+            //               maxHeight: 300.0
+            //           );
+            //           setState(() {
+            //             images[4] = File(pickedFile!.path);
+            //             isUploaded[4] = true;
+            //           });
+            //         } catch (err) {
+            //           print('ERROR: ' + err.toString());
+            //         }
+            //       },
+            //     ),
+            //   ) : Container(
+            //       child: Image(
+            //         image: FileImage(images[4]),
+            //       )
+            //   ),
+            // ),
+            // Step(
+            //   title: Text('Photo 6'),
+            //   content: (!isUploaded[5]) ? Container(
+            //     child: IconButton(
+            //       icon: Icon(
+            //         Icons.camera_alt_rounded,
+            //       ),
+            //       iconSize: 48,
+            //       onPressed: () async {
+            //         try{
+            //           final pickedFile = await picker.getImage(
+            //               source: ImageSource.camera,
+            //               maxHeight: 300.0
+            //           );
+            //           setState(() {
+            //             images[5] = File(pickedFile!.path);
+            //             isUploaded[5] = true;
+            //           });
+            //         } catch (err) {
+            //           print('ERROR: ' + err.toString());
+            //         }
+            //       },
+            //     ),
+            //   ) : Container(
+            //       child: Image(
+            //         image: FileImage(images[5]),
+            //       )
+            //   ),
+            // ),
+            // Step(
+            //   title: Text('Photo 7'),
+            //   content: (!isUploaded[6]) ? Container(
+            //     child: IconButton(
+            //       icon: Icon(
+            //         Icons.camera_alt_rounded,
+            //       ),
+            //       iconSize: 48,
+            //       onPressed: () async {
+            //         try{
+            //           final pickedFile = await picker.getImage(
+            //               source: ImageSource.camera,
+            //               maxHeight: 300.0
+            //           );
+            //           setState(() {
+            //             images[6] = File(pickedFile!.path);
+            //             isUploaded[6] = true;
+            //           });
+            //         } catch (err) {
+            //           print('ERROR: ' + err.toString());
+            //         }
+            //       },
+            //     ),
+            //   ) : Container(
+            //       child: Image(
+            //         image: FileImage(images[6]),
+            //       )
+            //   ),
+            // ),
+            // Step(
+            //   title: Text('Photo 8'),
+            //   content: (!isUploaded[7]) ? Container(
+            //     child: IconButton(
+            //       icon: Icon(
+            //         Icons.camera_alt_rounded,
+            //       ),
+            //       iconSize: 48,
+            //       onPressed: () async {
+            //         try{
+            //           final pickedFile = await picker.getImage(
+            //               source: ImageSource.camera,
+            //               maxHeight: 300.0
+            //           );
+            //           setState(() {
+            //             images[7] = File(pickedFile!.path);
+            //             isUploaded[7] = true;
+            //           });
+            //         } catch (err) {
+            //           print('ERROR: ' + err.toString());
+            //         }
+            //       },
+            //     ),
+            //   ) : Container(
+            //       child: Image(
+            //         image: FileImage(images[7]),
+            //       )
+            //   ),
+            // ),
+            // Step(
+            //   title: Text('Photo 9'),
+            //   content: (!isUploaded[8]) ? Container(
+            //     child: IconButton(
+            //       icon: Icon(
+            //         Icons.camera_alt_rounded,
+            //       ),
+            //       iconSize: 48,
+            //       onPressed: () async {
+            //         try{
+            //           final pickedFile = await picker.getImage(
+            //               source: ImageSource.camera,
+            //               maxHeight: 300.0
+            //           );
+            //           setState(() {
+            //             images[8] = File(pickedFile!.path);
+            //             isUploaded[8] = true;
+            //           });
+            //         } catch (err) {
+            //           print('ERROR: ' + err.toString());
+            //         }
+            //       },
+            //     ),
+            //   ) : Container(
+            //       child: Image(
+            //         image: FileImage(images[8]),
+            //       )
+            //   ),
+            // ),
+            // Step(
+            //   title: Text('Photo 10'),
+            //   content: (!isUploaded[9]) ? Container(
+            //     child: IconButton(
+            //       icon: Icon(
+            //         Icons.camera_alt_rounded,
+            //       ),
+            //       iconSize: 48,
+            //       onPressed: () async {
+            //         try{
+            //           final pickedFile = await picker.getImage(
+            //               source: ImageSource.camera,
+            //               maxHeight: 300.0
+            //           );
+            //           setState(() {
+            //             images[9] = File(pickedFile!.path);
+            //             isUploaded[9] = true;
+            //           });
+            //         } catch (err) {
+            //           print('ERROR: ' + err.toString());
+            //         }
+            //       },
+            //     ),
+            //   ) : Container(
+            //       child: Image(
+            //         image: FileImage(images[9]),
+            //       )
+            //   ),
+            // )
           ],
         )
       ),
