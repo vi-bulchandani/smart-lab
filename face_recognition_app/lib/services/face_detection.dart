@@ -1,15 +1,18 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:face_recognition_app/utilities/alert.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image/image.dart' as img;
 
 class FaceDetectionService {
 
   final File image;
+  final BuildContext context;
   late List<Face> faces;
   late img.Image processedImage; // Contains cropped image of most prominent face
 
-  FaceDetectionService({required this.image});
+  FaceDetectionService({required this.image, required this.context});
 
   Future<void> detectFace() async {
     final FaceDetector _faceDetector = FaceDetector(
@@ -17,7 +20,9 @@ class FaceDetectionService {
             performanceMode: FaceDetectorMode.accurate
         )
     );
-    faces = await _faceDetector.processImage(InputImage.fromFile(this.image));
+    faces = await _faceDetector.processImage(InputImage.fromFile(this.image)).catchError((err) {
+      showAlert(context, err.toString());
+    });
   }
 
   Future<void> cropFace() async{

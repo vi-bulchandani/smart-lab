@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:face_recognition_app/screens/home_page.dart';
+import 'package:face_recognition_app/utilities/alert.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -85,8 +86,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         setState(() {
                           isLoading = false;
                         });
-                        print('ERROR: Unable to upload user image ' + (i+1).toString());
-                        print('ERROR: ' + err.toString());
+                        showAlert(context, 'Unable to upload user image\n' + err.toString());
                       });
                     }
                     name = this.widget.name;
@@ -94,7 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     final SharedPreferences prefs = await SharedPreferences.getInstance();
                     prefs.setString('name', name.toString());
                     prefs.setString('email', email.toString());
-                    final FaceRecognitionService faceRecognitionService = await signUp(images);
+                    final FaceRecognitionService faceRecognitionService = await signUp(images, context);
                     db.collection('faces').doc('details').set({
                       this.widget.email.toString(): faceRecognitionService.faceVector
                     }, SetOptions(merge: true)).then((value) {
@@ -106,19 +106,17 @@ class _RegisterPageState extends State<RegisterPage> {
                       setState(() {
                         isLoading = false;
                       });
-                      print('ERROR: Unable to upload face vector');
-                      print('ERROR: ' + err.toString());
+                      showAlert(context, 'Unable to upload face vector\n' + err.toString());
                     });
                   }).catchError((err) {
                     setState(() {
                       isLoading = false;
                     });
-                    print('ERROR: Unable to upload user data');
-                    print('ERROR: ' + err.toString());
+                    showAlert(context, 'Unable to upload user data\n' + err.toString());
                   });
                 }
                 else{
-                  print('ERROR: Enter all details and 10 pictures to proceed');
+                  showAlert(context, 'Enter all details and upload photo to proceed');
                   _state = 1;
                 }
               }
@@ -198,7 +196,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         isUploaded[0] = true;
                       });
                     } catch (err) {
-                      print('ERROR: ' + err.toString());
+                      showAlert(context, err.toString());
                     }
                   },
                 ),

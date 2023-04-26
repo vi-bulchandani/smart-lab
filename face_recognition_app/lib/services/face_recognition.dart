@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:face_recognition_app/utilities/alert.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image/image.dart' as img;
 import 'face_detection.dart';
@@ -8,12 +10,13 @@ import 'face_detection.dart';
 class FaceRecognitionService {
 
   final FaceDetectionService faceDetectionService;
+  final BuildContext context;
   Interpreter? interpreter;
   double threshold = 0.5;
   late List imageVector;
   late List faceVector;
 
-  FaceRecognitionService({required this.faceDetectionService});
+  FaceRecognitionService({required this.faceDetectionService, required this.context});
 
   Future<void> initialize() async {
     late Delegate delegate;
@@ -45,8 +48,7 @@ class FaceRecognitionService {
       );
     }
     catch (err) {
-      print('ERR: Unable to load model');
-      print('ERR: ' + err.toString());
+      showAlert(this.context, 'Unable to load model\n' + err.toString());
     }
   }
 

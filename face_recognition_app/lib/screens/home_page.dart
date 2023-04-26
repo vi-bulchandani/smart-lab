@@ -4,6 +4,7 @@ import 'package:face_recognition_app/main.dart';
 import 'package:face_recognition_app/services/face_recognition.dart';
 import 'package:face_recognition_app/services/sign_up_service.dart';
 import 'package:face_recognition_app/services/thingspeak_data.dart';
+import 'package:face_recognition_app/utilities/alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -111,11 +112,10 @@ class _HomePageState extends State<HomePage> {
                       isLoading = false;
                       _state = i;
                     });
-                    print('ERROR: Unable to upload user image ' + (i+1).toString());
-                    print('ERROR: ' + err.toString());
+                    showAlert(context, 'Unable to upload user image\n' + err.toString());
                   });
                 }
-                final FaceRecognitionService faceRecognitionService = await signUp(images);
+                final FaceRecognitionService faceRecognitionService = await signUp(images, context);
                 FirebaseFirestore.instance.collection('faces').doc('details').set({
                   this.widget.email.toString(): faceRecognitionService.faceVector
                 }, SetOptions(merge: true)).then((value) {
@@ -130,13 +130,12 @@ class _HomePageState extends State<HomePage> {
                   setState(() {
                     isLoading = false;
                   });
-                  print('ERROR: Unable to upload face vector');
-                  print('ERROR: ' + err.toString());
+                  showAlert(context, 'Unable to upload face vector\n' + err.toString());
                 });
 
               }
               else{
-                print('ERROR: Enter all details and 10 pictures to proceed');
+                showAlert(context, 'Enter all details and upload photo to proceed');
                 _state = 0;
               }
             }
@@ -167,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                       isUploaded[0] = true;
                     });
                   } catch (err) {
-                    print('ERROR: ' + err.toString());
+                    showAlert(context, err.toString());
                   }
                 },
               ),
@@ -486,11 +485,11 @@ class _HomePageState extends State<HomePage> {
                           setState(() {
                             isLoading = true;
                           });
-                          await updateFlapState(1).catchError((err) {
+                          await updateFlapState(1, context).catchError((err) {
                             setState(() {
                               isLoading = false;
                             });
-                            print('ERROR: ' + err.toString());
+                            showAlert(context, err.toString());
                           });
                           setState(() {
                             isLoading = false;
@@ -506,14 +505,14 @@ class _HomePageState extends State<HomePage> {
                           setState(() {
                             isLoading = true;
                           });
-                          await updateFlapState(0).catchError((err) {
+                          await updateFlapState(0, context).catchError((err) {
                             setState(() {
                               isLoading = false;
                             });
-                            print('ERROR: ' + err.toString());
+                            showAlert(context, err.toString());
                           });
-                          await getData().catchError((err) {
-                            print('ERR: ' + err.toString());
+                          await getData(context).catchError((err) {
+                            showAlert(context, err.toString());
                             setState(() {
                               isLoading = false;
                             });
@@ -665,7 +664,7 @@ class _HomePageState extends State<HomePage> {
                 setState(() {
                   isLoading = true;
                 });
-                await getData();
+                await getData(context);
                 setState(() {
                   isLoading = false;
                 });
@@ -702,8 +701,8 @@ class _HomePageState extends State<HomePage> {
             setState(() {
               isLoading = true;
             });
-            await getData().catchError((err) {
-              print('ERR: ' + err.toString());
+            await getData(context).catchError((err) {
+              showAlert(context, err.toString());
               setState(() {
                 isLoading = false;
               });

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:face_recognition_app/utilities/alert.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
@@ -19,7 +21,7 @@ class ThingspeakData {
 List<ThingspeakData> data = [];
 String _dataUrl = 'https://thingspeak.com/channels/2098172/feeds.json';
 
-Future<void> getData() async{
+Future<void> getData(BuildContext context) async{
   print('INFO: Request made to Thingspeak Server');
   final response = await http.get(Uri.parse(_dataUrl));
   if(response.statusCode == 200){
@@ -36,11 +38,11 @@ Future<void> getData() async{
     }
   }
   else{
-    print('ERR: ${response.statusCode} - Failed to fetch data from Thingspeak');
+    showAlert(context, '${response.statusCode} - Failed to fetch data from Thingspeak');
   }
 }
 
-Future<void> updateFlapState(int updatedState) async {
+Future<void> updateFlapState(int updatedState, BuildContext context) async {
   print('INFO: Sending update to Thingspeak Server');
   var url = 'https://api.thingspeak.com/update';
   var body = json.encode({'api_key': 'PX70HD36BJ7MACXK', 'field5': updatedState});
@@ -52,6 +54,6 @@ Future<void> updateFlapState(int updatedState) async {
     print('INFO: Updated Thingspeak Server successfully');
   }
   else{
-    print('ERR: ${response.statusCode} - Failed updating data to Thingspeak');
+    showAlert(context, '${response.statusCode} - Failed updating data to Thingspeak');
   }
 }
