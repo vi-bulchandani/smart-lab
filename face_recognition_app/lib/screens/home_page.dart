@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
 
     _zoomPanBehavior = ZoomPanBehavior(
       enablePinching: true,
-      enableDoubleTapZooming: true
+      enableDoubleTapZooming: false
     );
 
     _trackballBehavior = TrackballBehavior(
@@ -444,141 +444,146 @@ class _HomePageState extends State<HomePage> {
         color: Colors.red,
         size: 48.0,
       ) :
-      ListView(
-        // shrinkWrap: true,
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height / 4,
-            child: SfCartesianChart(
-              primaryXAxis: CategoryAxis(
-                title: AxisTitle(
-                  text: 'Timestamp'
-                )
-              ),
-              primaryYAxis: NumericAxis(
-                title: AxisTitle(
-                  text: 'CO (ppm)'
-                )
-              ),
-              zoomPanBehavior: _zoomPanBehavior,
-              trackballBehavior: _trackballBehavior,
-              margin: EdgeInsets.all(24.0),
-              series: [
-                LineSeries(
-                  dataSource: data,
-                  xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
-                  yValueMapper: (ThingspeakData info, _) => info.field1
-                )
-              ],
-            ),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height / 4,
-            child: SfCartesianChart(
-              primaryXAxis: CategoryAxis(
+      Scrollbar(
+        isAlwaysShown: true,
+        thickness: 22.0,
+        interactive: true,
+        child: ListView(
+          // shrinkWrap: true,
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height / 3,
+              child: SfCartesianChart(
+                primaryXAxis: CategoryAxis(
                   title: AxisTitle(
-                      text: 'Timestamp'
+                    text: 'Timestamp'
                   )
-              ),
-              primaryYAxis: NumericAxis(
+                ),
+                primaryYAxis: NumericAxis(
                   title: AxisTitle(
-                      text: 'MQ5 (ppm)'
+                    text: 'CO (ppm)'
                   )
-              ),
-              zoomPanBehavior: _zoomPanBehavior,
-              trackballBehavior: _trackballBehavior,
-              margin: EdgeInsets.all(24.0),
-              series: [
-                LineSeries(
+                ),
+                zoomPanBehavior: _zoomPanBehavior,
+                trackballBehavior: _trackballBehavior,
+                margin: EdgeInsets.all(24.0),
+                series: [
+                  LineSeries(
                     dataSource: data,
                     xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
-                    yValueMapper: (ThingspeakData info, _) => info.field2
-                )
-              ],
-            ),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height / 4,
-            child: SfCartesianChart(
-              primaryXAxis: CategoryAxis(
-                  title: AxisTitle(
-                      text: 'Timestamp'
+                    yValueMapper: (ThingspeakData info, _) => info.field1
                   )
+                ],
               ),
-              primaryYAxis: NumericAxis(
-                  title: AxisTitle(
-                      text: 'Temperature (in Celcius)',
-                    textStyle: TextStyle(
-                      fontSize: 8.0
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height / 3,
+              child: SfCartesianChart(
+                primaryXAxis: CategoryAxis(
+                    title: AxisTitle(
+                        text: 'Timestamp'
                     )
-                  )
-              ),
-              zoomPanBehavior: _zoomPanBehavior,
-              trackballBehavior: _trackballBehavior,
-              margin: EdgeInsets.all(24.0),
-              series: [
-                LineSeries(
-                    dataSource: data,
-                    xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
-                    yValueMapper: (ThingspeakData info, _) => info.field3
-                )
-              ],
-            ),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height / 4,
-            child: SfCartesianChart(
-              primaryXAxis: CategoryAxis(
-                  title: AxisTitle(
-                      text: 'Timestamp'
-                  )
-              ),
-              primaryYAxis: NumericAxis(
-                  title: AxisTitle(
-                      text: 'Humidity (in percentage)',
-                    textStyle: TextStyle(
-                      fontSize: 8.0
+                ),
+                primaryYAxis: NumericAxis(
+                    title: AxisTitle(
+                        text: 'MQ5 (ppm)'
                     )
+                ),
+                zoomPanBehavior: _zoomPanBehavior,
+                trackballBehavior: _trackballBehavior,
+                margin: EdgeInsets.all(24.0),
+                series: [
+                  LineSeries(
+                      dataSource: data,
+                      xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
+                      yValueMapper: (ThingspeakData info, _) => info.field2
                   )
+                ],
               ),
-              zoomPanBehavior: _zoomPanBehavior,
-              trackballBehavior: _trackballBehavior,
-              margin: EdgeInsets.all(24.0),
-              series: [
-                LineSeries(
-                    dataSource: data,
-                    xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
-                    yValueMapper: (ThingspeakData info, _) => info.field4
-                )
-              ],
             ),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height / 4,
-            child: SfCartesianChart(
-              primaryXAxis: CategoryAxis(
-                  title: AxisTitle(
-                      text: 'Timestamp'
+            Container(
+              height: MediaQuery.of(context).size.height / 3,
+              child: SfCartesianChart(
+                primaryXAxis: CategoryAxis(
+                    title: AxisTitle(
+                        text: 'Timestamp'
+                    )
+                ),
+                primaryYAxis: NumericAxis(
+                    title: AxisTitle(
+                        text: 'Temp (in ºC)',
+                      textStyle: TextStyle(
+                        //fontSize: 12.0
+                      )
+                    )
+                ),
+                zoomPanBehavior: _zoomPanBehavior,
+                trackballBehavior: _trackballBehavior,
+                margin: EdgeInsets.all(24.0),
+                series: [
+                  LineSeries(
+                      dataSource: data,
+                      xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
+                      yValueMapper: (ThingspeakData info, _) => info.field3
                   )
+                ],
               ),
-              primaryYAxis: NumericAxis(
-                  title: AxisTitle(
-                      text: 'Flap State'
-                  )
-              ),
-              zoomPanBehavior: _zoomPanBehavior,
-              trackballBehavior: _trackballBehavior,
-              margin: EdgeInsets.all(24.0),
-              series: [
-                LineSeries(
-                    dataSource: data,
-                    xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
-                    yValueMapper: (ThingspeakData info, _) => info.field5
-                )
-              ],
             ),
-          ),
-        ],
+            Container(
+              height: MediaQuery.of(context).size.height / 3,
+              child: SfCartesianChart(
+                primaryXAxis: CategoryAxis(
+                    title: AxisTitle(
+                        text: 'Timestamp'
+                    )
+                ),
+                primaryYAxis: NumericAxis(
+                    title: AxisTitle(
+                        text: 'Humidity (in %)',
+                      textStyle: TextStyle(
+                        //fontSize: 12.0
+                      )
+                    )
+                ),
+                zoomPanBehavior: _zoomPanBehavior,
+                trackballBehavior: _trackballBehavior,
+                margin: EdgeInsets.all(24.0),
+                series: [
+                  LineSeries(
+                      dataSource: data,
+                      xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
+                      yValueMapper: (ThingspeakData info, _) => info.field4
+                  )
+                ],
+              ),
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height / 3,
+              child: SfCartesianChart(
+                primaryXAxis: CategoryAxis(
+                    title: AxisTitle(
+                        text: 'Timestamp'
+                    )
+                ),
+                primaryYAxis: NumericAxis(
+                    title: AxisTitle(
+                        text: 'Flap State'
+                    )
+                ),
+                zoomPanBehavior: _zoomPanBehavior,
+                trackballBehavior: _trackballBehavior,
+                margin: EdgeInsets.all(24.0),
+                series: [
+                  LineSeries(
+                      dataSource: data,
+                      xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
+                      yValueMapper: (ThingspeakData info, _) => info.field5
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
       Container(
         child: Text(

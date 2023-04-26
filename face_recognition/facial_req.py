@@ -3,12 +3,10 @@
 # import the necessary packages
 from imutils.video import VideoStream
 from imutils.video import FPS
-import face_recognition
-import imutils
 import pickle
 import time
 import cv2
-
+import tflite_runtime.interpreter as tflite
 
 #Initialize 'currentname' to trigger only when a new person is identified.
 currentname = "unknown"
