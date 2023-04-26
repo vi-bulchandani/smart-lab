@@ -39,3 +39,19 @@ Future<void> getData() async{
     print('ERR: ${response.statusCode} - Failed to fetch data from Thingspeak');
   }
 }
+
+Future<void> updateFlapState(int updatedState) async {
+  print('INFO: Sending update to Thingspeak Server');
+  var url = 'https://api.thingspeak.com/update';
+  var body = json.encode({'api_key': 'PX70HD36BJ7MACXK', 'field5': updatedState});
+  Map<String, String> headers = {
+    'Content-Type': 'application/json'
+  };
+  final response = await http.post(Uri.parse(url), headers: headers, body: body);
+  if(response.statusCode == 200 && response.body != '0'){
+    print('INFO: Updated Thingspeak Server successfully');
+  }
+  else{
+    print('ERR: ${response.statusCode} - Failed updating data to Thingspeak');
+  }
+}

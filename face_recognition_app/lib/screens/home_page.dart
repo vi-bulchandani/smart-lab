@@ -453,6 +453,86 @@ class _HomePageState extends State<HomePage> {
           children: [
             Container(
               height: MediaQuery.of(context).size.height / 3,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                border: Border.all(
+                  color: Colors.blue,
+                  style: BorderStyle.solid
+                ),
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    'Control AC Flap',
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  Icon(
+                    Icons.ac_unit_rounded,
+                    size: 36.0,
+                    color: Colors.grey,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      FloatingActionButton(
+                        backgroundColor: Colors.green,
+                        onPressed: () async{
+                          setState(() {
+                            isLoading = true;
+                          });
+                          await updateFlapState(1).catchError((err) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            print('ERROR: ' + err.toString());
+                          });
+                          setState(() {
+                            isLoading = false;
+                          });
+                        },
+                        child: Text(
+                          'ON'
+                        ),
+                      ),
+                      FloatingActionButton(
+                        backgroundColor: Colors.red,
+                        onPressed: () async{
+                          setState(() {
+                            isLoading = true;
+                          });
+                          await updateFlapState(0).catchError((err) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            print('ERROR: ' + err.toString());
+                          });
+                          await getData().catchError((err) {
+                            print('ERR: ' + err.toString());
+                            setState(() {
+                              isLoading = false;
+                            });
+                          });
+                          setState(() {
+                            isLoading = false;
+                          });
+                        },
+                        child: Text(
+                          'OFF'
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height / 3,
               child: SfCartesianChart(
                 primaryXAxis: CategoryAxis(
                   title: AxisTitle(
@@ -553,31 +633,6 @@ class _HomePageState extends State<HomePage> {
                       dataSource: data,
                       xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
                       yValueMapper: (ThingspeakData info, _) => info.field4
-                  )
-                ],
-              ),
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height / 3,
-              child: SfCartesianChart(
-                primaryXAxis: CategoryAxis(
-                    title: AxisTitle(
-                        text: 'Timestamp'
-                    )
-                ),
-                primaryYAxis: NumericAxis(
-                    title: AxisTitle(
-                        text: 'Flap State'
-                    )
-                ),
-                zoomPanBehavior: _zoomPanBehavior,
-                trackballBehavior: _trackballBehavior,
-                margin: EdgeInsets.all(24.0),
-                series: [
-                  LineSeries(
-                      dataSource: data,
-                      xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
-                      yValueMapper: (ThingspeakData info, _) => info.field5
                   )
                 ],
               ),
