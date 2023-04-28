@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
       Stepper(
         currentStep: _state,
         onStepCancel: (){
-          if (_state > 0) {
+          if (_state >= 0) {
             if(isUploaded[_state]){
               setState(() {
                 isUploaded[_state] = false;
@@ -451,7 +451,7 @@ class _HomePageState extends State<HomePage> {
           // shrinkWrap: true,
           children: [
             Container(
-              height: MediaQuery.of(context).size.height / 3,
+              height: MediaQuery.of(context).size.height / 2,
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 border: Border.all(
@@ -471,10 +471,99 @@ class _HomePageState extends State<HomePage> {
                       fontWeight: FontWeight.bold
                     ),
                   ),
-                  Icon(
-                    Icons.ac_unit_rounded,
-                    size: 36.0,
-                    color: Colors.grey,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.add_circle_outline_rounded
+                            ),
+                            onPressed: () {
+                              if((minTemp+1 < maxTemp) && (minTemp+1 <= 40)){
+                                setState(() {
+                                  minTemp++;
+                                });
+                              }
+                            },
+                          ),
+                          Text(
+                            minTemp.toString(),
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey
+                            ),
+                          ),
+                          Text(
+                            'MIN',
+                            style: TextStyle(
+                              fontSize: 12
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.remove_circle_outline_rounded,
+                            ),
+                            onPressed: () {
+                              if(minTemp-1 >= 10){
+                                setState(() {
+                                  minTemp--;
+                                });
+                              }
+                            },
+                          )
+                        ],
+                      ),
+                      Icon(
+                        Icons.ac_unit_rounded,
+                        size: 36.0,
+                        color: Colors.grey,
+                      ),
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                                Icons.add_circle_outline_rounded
+                            ),
+                            onPressed: () {
+                              if(maxTemp+1 <= 40){
+                                setState(() {
+                                  maxTemp++;
+                                });
+                              }
+                            },
+                          ),
+                          Text(
+                            maxTemp.toString(),
+                            style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey
+                            ),
+                          ),
+                          Text(
+                            'MAX',
+                            style: TextStyle(
+                                fontSize: 12
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.remove_circle_outline_rounded,
+                            ),
+                            onPressed: () {
+                              if((maxTemp-1 > minTemp) && (maxTemp-1 >= 10)){
+                                setState(() {
+                                  maxTemp--;
+                                });
+                              }
+                            },
+                          )
+                        ],
+                      ),
+                    ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -491,12 +580,45 @@ class _HomePageState extends State<HomePage> {
                             });
                             showAlert(context, err.toString());
                           });
+                          await getData(context).catchError((err) {
+                            showAlert(context, err.toString());
+                            setState(() {
+                              isLoading = false;
+                            });
+                          });
                           setState(() {
                             isLoading = false;
                           });
                         },
                         child: Text(
                           'ON'
+                        ),
+                      ),
+                      FloatingActionButton(
+                        backgroundColor: Colors.amber,
+                        onPressed: () async{
+                          setState(() {
+                            isLoading = true;
+                          });
+                          await updateThresholdTemperature(context).catchError((err) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            showAlert(context, err.toString());
+                          });
+                          await getData(context).catchError((err) {
+                            showAlert(context, err.toString());
+                            setState(() {
+                              isLoading = false;
+                            });
+                          });
+                          setState(() {
+                            isLoading = false;
+                          });
+                        },
+                        child: Text(
+                          'SET TEMP',
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       FloatingActionButton(
@@ -660,7 +782,12 @@ class _HomePageState extends State<HomePage> {
               Icons.refresh_rounded,
             ),
             onPressed: () async {
-              if(_selectedPage == 1){
+              if(_selectedPage == 0){
+                setState(() {
+                  isUploaded[0] = false;
+                });
+              }
+              else if(_selectedPage == 1){
                 setState(() {
                   isLoading = true;
                 });
