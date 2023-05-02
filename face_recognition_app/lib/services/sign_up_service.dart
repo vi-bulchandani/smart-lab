@@ -15,5 +15,7 @@ Future<FaceRecognitionService> signUp(List<File> images, BuildContext context) a
   faceRecognitionService.processImage();
   faceRecognitionService.predictFace();
 
+  print('INFO: ' + faceRecognitionService.faceVector.toString());
+
   return faceRecognitionService;
 }
