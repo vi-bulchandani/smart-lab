@@ -8,7 +8,7 @@ import 'dart:convert' as convert;
 class ThingspeakData {
 
   final double field1;
-  final double field2;
+  // final double field2;
   final double field3;
   final double field4;
   final int field5;
@@ -16,7 +16,7 @@ class ThingspeakData {
   final int field7;
   final DateTime timestamp;
 
-  ThingspeakData(this.field1, this.field2, this.field3, this.field4, this.field5, this.field6, this.field7, this.timestamp);
+  ThingspeakData(this.field1, this.field3, this.field4, this.field5, this.field6, this.field7, this.timestamp);
 
 }
 
@@ -33,11 +33,12 @@ Future<void> getData(BuildContext context) async{
     data = [];
     dynamic jsonResponseData = jsonDecode(response.body);
     for(var item in jsonResponseData['feeds']){
-      if(item['field1']!=null && item['field2']!=null && item['field3']!=null && item['field4']!=null){
+      if(item['field1']!=null && item['field3']!=null && item['field4']!=null){
+        if(item['field1'] == 'nan' || item['field3'] == 'nan' || item['field4'] == 'nan') continue;
         if(item['field5'] == null) item['field5'] = 0;
         if(item['field6'] == null) item['field6'] = 0;
         if(item['field7'] == null) item['field7'] = 0;
-        data.add(ThingspeakData(double.parse(item['field1'].toString()), double.parse(item['field2'].toString()), double.parse(item['field3'].toString()), double.parse(item['field4'].toString()), int.parse(item['field5'].toString()), int.parse(item['field6'].toString()), int.parse(item['field7'].toString()), DateTime.parse(item['created_at'].toString())));
+        data.add(ThingspeakData(double.parse(item['field1'].toString()), double.parse(item['field3'].toString()), double.parse(item['field4'].toString()), int.parse(item['field5'].toString()), int.parse(item['field6'].toString()), int.parse(item['field7'].toString()), DateTime.parse(item['created_at'].toString())));
       }
       if(item['field6']!=null && item['field7']!=null){
         minTemp = int.parse(item['field6'].toString());
@@ -45,7 +46,7 @@ Future<void> getData(BuildContext context) async{
       }
     }
     for(var feed in data){
-      print('INFO: ' + feed.field1.toString() + ', ' + feed.field2.toString() + ', ' + feed.field3.toString() + ', ' + feed.field4.toString() + ', ' + feed.field5.toString() + ', ' + feed.timestamp.toString());
+      print('INFO: ' + feed.field1.toString() + ', ' + feed.field3.toString() + ', ' + feed.field4.toString() + ', ' + feed.field5.toString() + ', ' + feed.timestamp.toString());
     }
   }
   else{

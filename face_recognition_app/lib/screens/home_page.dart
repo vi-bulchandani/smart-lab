@@ -565,35 +565,44 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
+                  Text(
+                    'Live Temperature: ${data.last.field3.toStringAsFixed(1)}ºC'
+                  ),
+                  Text(
+                      'Live Humidity: ${data.last.field4.toStringAsFixed(0)}%'
+                  ),
+                  Text(
+                      'Live CO: ${data.last.field1.toStringAsFixed(2)} ppm'
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      FloatingActionButton(
-                        backgroundColor: Colors.green,
-                        onPressed: () async{
-                          setState(() {
-                            isLoading = true;
-                          });
-                          await updateFlapState(1, context).catchError((err) {
-                            setState(() {
-                              isLoading = false;
-                            });
-                            showAlert(context, err.toString());
-                          });
-                          await getData(context).catchError((err) {
-                            showAlert(context, err.toString());
-                            setState(() {
-                              isLoading = false;
-                            });
-                          });
-                          setState(() {
-                            isLoading = false;
-                          });
-                        },
-                        child: Text(
-                          'ON'
-                        ),
-                      ),
+                      // FloatingActionButton(
+                      //   backgroundColor: Colors.green,
+                      //   onPressed: () async{
+                      //     setState(() {
+                      //       isLoading = true;
+                      //     });
+                      //     await updateFlapState(1, context).catchError((err) {
+                      //       setState(() {
+                      //         isLoading = false;
+                      //       });
+                      //       showAlert(context, err.toString());
+                      //     });
+                      //     await getData(context).catchError((err) {
+                      //       showAlert(context, err.toString());
+                      //       setState(() {
+                      //         isLoading = false;
+                      //       });
+                      //     });
+                      //     setState(() {
+                      //       isLoading = false;
+                      //     });
+                      //   },
+                      //   child: Text(
+                      //     'ON'
+                      //   ),
+                      // ),
                       FloatingActionButton(
                         backgroundColor: Colors.amber,
                         onPressed: () async{
@@ -621,32 +630,32 @@ class _HomePageState extends State<HomePage> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      FloatingActionButton(
-                        backgroundColor: Colors.red,
-                        onPressed: () async{
-                          setState(() {
-                            isLoading = true;
-                          });
-                          await updateFlapState(0, context).catchError((err) {
-                            setState(() {
-                              isLoading = false;
-                            });
-                            showAlert(context, err.toString());
-                          });
-                          await getData(context).catchError((err) {
-                            showAlert(context, err.toString());
-                            setState(() {
-                              isLoading = false;
-                            });
-                          });
-                          setState(() {
-                            isLoading = false;
-                          });
-                        },
-                        child: Text(
-                          'OFF'
-                        ),
-                      ),
+                      // FloatingActionButton(
+                      //   backgroundColor: Colors.red,
+                      //   onPressed: () async{
+                      //     setState(() {
+                      //       isLoading = true;
+                      //     });
+                      //     await updateFlapState(0, context).catchError((err) {
+                      //       setState(() {
+                      //         isLoading = false;
+                      //       });
+                      //       showAlert(context, err.toString());
+                      //     });
+                      //     await getData(context).catchError((err) {
+                      //       showAlert(context, err.toString());
+                      //       setState(() {
+                      //         isLoading = false;
+                      //       });
+                      //     });
+                      //     setState(() {
+                      //       isLoading = false;
+                      //     });
+                      //   },
+                      //   child: Text(
+                      //     'OFF'
+                      //   ),
+                      // ),
                     ],
                   )
                 ],
@@ -677,31 +686,31 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            Container(
-              height: MediaQuery.of(context).size.height / 3,
-              child: SfCartesianChart(
-                primaryXAxis: CategoryAxis(
-                    title: AxisTitle(
-                        text: 'Timestamp'
-                    )
-                ),
-                primaryYAxis: NumericAxis(
-                    title: AxisTitle(
-                        text: 'MQ5 (ppm)'
-                    )
-                ),
-                zoomPanBehavior: _zoomPanBehavior,
-                trackballBehavior: _trackballBehavior,
-                margin: EdgeInsets.all(24.0),
-                series: [
-                  LineSeries(
-                      dataSource: data,
-                      xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
-                      yValueMapper: (ThingspeakData info, _) => info.field2
-                  )
-                ],
-              ),
-            ),
+            // Container(
+            //   height: MediaQuery.of(context).size.height / 3,
+            //   child: SfCartesianChart(
+            //     primaryXAxis: CategoryAxis(
+            //         title: AxisTitle(
+            //             text: 'Timestamp'
+            //         )
+            //     ),
+            //     primaryYAxis: NumericAxis(
+            //         title: AxisTitle(
+            //             text: 'MQ5 (ppm)'
+            //         )
+            //     ),
+            //     zoomPanBehavior: _zoomPanBehavior,
+            //     trackballBehavior: _trackballBehavior,
+            //     margin: EdgeInsets.all(24.0),
+            //     series: [
+            //       LineSeries(
+            //           dataSource: data,
+            //           xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
+            //           yValueMapper: (ThingspeakData info, _) => info.field2
+            //       )
+            //     ],
+            //   ),
+            // ),
             Container(
               height: MediaQuery.of(context).size.height / 3,
               child: SfCartesianChart(
