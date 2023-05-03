@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:face_recognition_app/screens/welcome_page.dart';
 import 'package:face_recognition_app/main.dart';
+import 'package:face_recognition_app/services/entry_logs.dart';
 import 'package:face_recognition_app/services/face_recognition.dart';
 import 'package:face_recognition_app/services/sign_up_service.dart';
 import 'package:face_recognition_app/services/thingspeak_data.dart';
@@ -116,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                   });
                 }
                 final FaceRecognitionService faceRecognitionService = await signUp(images, context);
-                FirebaseFirestore.instance.collection('faces').doc('details').set({
+                FirebaseFirestore.instance.collection('metadata').doc('faces').set({
                   this.widget.email.toString(): faceRecognitionService.faceVector
                 }, SetOptions(merge: true)).then((value) {
                   setState(() {
@@ -565,13 +566,13 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  Text(
+                  if(!data.isEmpty) Text(
                     'Live Temperature: ${data.last.field3.toStringAsFixed(1)}ºC'
                   ),
-                  Text(
+                  if(!data.isEmpty) Text(
                       'Live Humidity: ${data.last.field4.toStringAsFixed(0)}%'
                   ),
-                  Text(
+                  if(!data.isEmpty) Text(
                       'Live CO: ${data.last.field1.toStringAsFixed(2)} ppm'
                   ),
                   Row(
@@ -771,14 +772,28 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       Container(
-        child: Text(
-            'Page 3'
-        ),
-      ),
-      Container(
-        child: Text(
-            'Page 4'
-        ),
+        child: SizedBox.expand(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Person Count',
+                style: TextStyle(
+                  fontSize: 24
+                ),
+              ),
+              Text(
+                personCount.toString(),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 300,
+                  color: Colors.grey
+                ),
+              )
+            ],
+          ),
+        )
       )
     ];
 
@@ -801,6 +816,15 @@ class _HomePageState extends State<HomePage> {
                   isLoading = true;
                 });
                 await getData(context);
+                setState(() {
+                  isLoading = false;
+                });
+              }
+              else if(_selectedPage == 2){
+                setState(() {
+                  isLoading = true;
+                });
+                await getPersonCount(context);
                 setState(() {
                   isLoading = false;
                 });
@@ -847,6 +871,16 @@ class _HomePageState extends State<HomePage> {
               isLoading = false;
             });
           }
+
+          if(index == 2){
+            setState(() {
+              isLoading = true;
+            });
+            await getPersonCount(context);
+            setState(() {
+              isLoading = false;
+            });
+          }
         },
         items: [
           BottomNavigationBarItem(
@@ -861,13 +895,6 @@ class _HomePageState extends State<HomePage> {
                 Icons.query_stats_rounded
             ),
             label: 'Live Environment',
-            backgroundColor: Colors.blue
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-                Icons.key_rounded
-            ),
-            label: 'Key Logs',
             backgroundColor: Colors.blue
           ),
           BottomNavigationBarItem(

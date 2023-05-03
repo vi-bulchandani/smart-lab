@@ -10,6 +10,7 @@ import 'package:face_recognition_app/main.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:face_recognition_app/services/sign_up_service.dart';
 import 'package:face_recognition_app/services/face_recognition.dart';
+import 'package:face_recognition_app/services/entry_logs.dart';
 
 class RegisterPage extends StatefulWidget {
 
@@ -95,12 +96,13 @@ class _RegisterPageState extends State<RegisterPage> {
                     prefs.setString('name', name.toString());
                     prefs.setString('email', email.toString());
                     final FaceRecognitionService faceRecognitionService = await signUp(images, context);
-                    db.collection('faces').doc('details').set({
+                    db.collection('metadata').doc('faces').set({
                       this.widget.email.toString(): faceRecognitionService.faceVector
-                    }, SetOptions(merge: true)).then((value) {
+                    }, SetOptions(merge: true)).then((value) async{
                       setState(() {
                         isLoading = false;
                       });
+                      await getPersonCount(context);
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(name: name.toString(), email: email.toString(),)));
                     }).catchError((err) {
                       setState(() {
