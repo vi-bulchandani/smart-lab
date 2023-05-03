@@ -772,28 +772,61 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       Container(
-        child: SizedBox.expand(
-          child: Column(
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+        child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                'Person Count',
-                style: TextStyle(
-                  fontSize: 24
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(
+                    'Total Number of Persons:  ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  Text(
+                    personCount.toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32
+                    ),
+                  )
+                ],
               ),
-              Text(
-                personCount.toString(),
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 300,
-                  color: Colors.grey
-                ),
+              SizedBox(height: 16.0,),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: entryLogs.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    margin: EdgeInsets.symmetric(vertical: 4.0),
+                    child: ListTile(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Colors.grey
+                        ),
+                        borderRadius: BorderRadius.circular(20)
+                      ),
+                      leading: Icon(
+                        Icons.person_rounded,
+                        size: 40,
+                        color: (entryLogs[index].email == 'Intruder') ? Colors.red : Colors.black,
+                      ),
+                      title: Text(
+                        entryLogs[index].email
+                      ),
+                      subtitle: Text(
+                        entryLogs[index].timestamp.toLocal().toString()
+                      ),
+                    ),
+                  );
+                },
               )
             ],
           ),
-        )
       )
     ];
 
