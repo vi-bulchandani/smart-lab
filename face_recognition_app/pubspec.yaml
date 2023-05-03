@@ -81,6 +81,7 @@ flutter:
     - assets/mobilefacenet.tflite
     - assets/facenet_512.tflite
     - assets/facenet.tflite
+    - assets/logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

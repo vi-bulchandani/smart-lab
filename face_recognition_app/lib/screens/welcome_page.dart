@@ -26,6 +26,11 @@ class _WelcomePageState extends State<WelcomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image(
+              image: AssetImage('assets/logo.png'),
+              height: MediaQuery.of(context).size.height / 3,
+            ),
+            SizedBox(height: 16,),
             Text(
               'Welcome to Smart Lab',
               style: TextStyle(
