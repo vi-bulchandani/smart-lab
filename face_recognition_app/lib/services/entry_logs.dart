@@ -14,6 +14,7 @@ int personCount = 0;
 List<EntryLog> entryLogs = [];
 
 Future<void> getPersonCount(BuildContext context) async {
+  entryLogs.clear();
   await FirebaseFirestore.instance.collection('metadata').doc('environment').get().then((DocumentSnapshot documentSnapshot) {
     final data = documentSnapshot.data() as Map<String, dynamic>;
     personCount = int.parse(data['personCount'].toString());
