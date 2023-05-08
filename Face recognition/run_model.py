@@ -1,38 +1,47 @@
-from imutils.video import VideoStream
+from imutils.video import VideoStream #import required for accessing video stream
 from imutils.video import FPS
-import numpy as np
+import numpy as np # required for model calculation 
 import imutils
 import time
 import cv2
 import tensorflow as tf
-import serial
+import serial # requiredf or interacting with arduino port
 from serial import *
-from threading import Thread
+from threading import Thread  #required for multithreading
 import io
-import re
-import face_recognition
+import face_recognition  # required for detecting faces
+
+# required for connecting to firebase
 from google.cloud import firestore
 from google.oauth2 import service_account
 
-delay = 100
-time_scan = 10
-last_received = ''
-recognised = 0
-state = 0
-count = 0
-credentials = service_account.Credentials.from_service_account_file('luminous-shadow-334212-4fcb1265d7f1.json')
-db = firestore.Client(credentials=credentials)
 
-doc_ref = db.collection('metadata').document('faces')
+delay = 100  # delay for atduino in ms
+time_scan = 10  # time delay after scanning faces to allow entry
+last_received = ''  #last result from arduino
+recognised = 0  # whether scanned face in known
+state = 0
+count = 0  # number of people in the room
+credentials = service_account.Credentials.from_service_account_file('luminous-shadow-334212-4fcb1265d7f1.json')  # credential file
+db = firestore.Client(credentials=credentials) #connect to firestore
+
+
+doc_ref = db.collection('metadata').document('faces')  # access the collection with the face encodings data 
 doc = doc_ref.get()
 if doc.exists:
     faceVectors = doc.to_dict()
 else:
     print('No such document!')
 
+# load the required model
 interpreter = tf.lite.Interpreter(model_path="facenet_512.tflite")
 
+
 def print_to_Arduino(ser):
+  """
+  writes the recognized variable in the serial of arduino
+  ser: serial object connected to Arduino
+  """
   global recognised
   while True:
       for i in range((time_scan*delay)//1000):
@@ -40,18 +49,29 @@ def print_to_Arduino(ser):
         time.sleep(delay/1000)
 
 def euclidean_distance(a, b):
+     """
+     calculate euclidean distance between 2 vectors
+     """
      return np.sqrt(np.sum(np.array(a)-np.array(b))**2)
 
 def cosine_distance(a, b):
+    """
+    calculate cosine distance between 2 vectors
+    1-cos(theta)
+    """
     a1 = np.squeeze(np.asarray(a))
     b1 = np.squeeze(np.asarray(b))
     return 1 - (a1.dot(b1) / (np.linalg.norm(a1) * np.linalg.norm(b1)))  # sure??
 
 def receiving(ser):
+    """
+    analyses the data received by the arduino connected to the Serial object ser
+    It determines the state : entry/ Exit / intrusion in order to raise alarm and update the count and logs
+    """
     global last_received
     global count
     buffer_string = ''
-    while True:
+    while True: # loops takes out the data of the last complete line recieved
         buffer_string = buffer_string + ser.read(ser.inWaiting()).decode()
         if '\n' in buffer_string:
             lines = buffer_string.split('\n') # Guaranteed to have at least 2 entries
@@ -90,20 +110,27 @@ time.sleep(2.0)
 fps = FPS().start()
 # loop over frames from the video file stream
 
-
+"""
+main event loop
+set the port, baudrate, timeout for the arduino serial port
+"""
 with Serial(port='COM5', baudrate=115200, timeout=0.1) as ser:
-  Thread(target=receiving, args=(ser,)).start()
-  Thread(target=print_to_Arduino, args=(ser,)).start()
+  Thread(target=receiving, args=(ser,)).start()  # analyse  the arduino stream in a continuous loop in another thread
+  Thread(target=print_to_Arduino, args=(ser,)).start() # print recognized status to arduino in another thread
   while True:
     # grab the frame from the threaded video stream and resize it
     # to 500px (to speedup processing)
     frame1 = vs.read()
     frame1 = imutils.resize(frame1, width=500)
+    # show the image
+    # here we are using key inout to trigger image processing 
+    # you can set it to gpio events also
     cv2.imshow("Facial recognition is running", frame1)
     key = cv2.waitKey(1) & 0xFF
     if key == ord("a"):
           frame = vs.read()
           frame = imutils.resize(frame, width=500)
+          # get the face locations in the form of rectangles 
           boxes = face_recognition.face_locations(frame)
           print(boxes)
           if(len(boxes) > 0):
@@ -120,9 +147,14 @@ with Serial(port='COM5', baudrate=115200, timeout=0.1) as ser:
             interpreter.invoke()
             output_data = interpreter.get_tensor(output_details[0]['index'])
             print(output_data)
+            # for program quit
             key = cv2.waitKey(1) & 0xFF
             if key == ord("q"):
               break
+            # compare face embeddings to embeddings retrieved from the cloud using distance metric
+            # select the one with least distance crossing the threshold
+            # recognised variable will be set this way
+
             min_distance = float('inf')
             recognised_name = ''
             print('new image')
@@ -150,7 +182,7 @@ with Serial(port='COM5', baudrate=115200, timeout=0.1) as ser:
 	# and find the index of the minimum distance
 
 
-	
+# older approach:
 
 # 	# loop over the facial embeddings
 # 	for encoding in encodings:
