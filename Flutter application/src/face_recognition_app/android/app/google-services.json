@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "801513956820",
+    "project_id": "luminous-shadow-334212",
+    "storage_bucket": "luminous-shadow-334212.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:801513956820:android:e41ea67234dd4165876241",
+        "android_client_info": {
+          "package_name": "com.example.face_recognition_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "801513956820-99kcqi9aotatl2s8tautpqnh6kq2417q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.face_recognition_app",
+            "certificate_hash": "7b6ce7099aee1005889ca7a9e14676010bb1c1eb"
+          }
+        },
+        {
+          "client_id": "801513956820-sm0qjbh7s3vjfl4lnvg303jjk2vrdj1f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.face_recognition_app",
+            "certificate_hash": "4e52b94683fe1b88eb251832a1aa3db24340ea2b"
+          }
+        },
+        {
+          "client_id": "801513956820-sgisrd9vke9h6r15evbdqdcau5t9ru03.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbxz3CiqGa42nqkEIDaIHw_1SD_vJv1cI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "801513956820-moe7s4qdl5fp18kco3b3lt17o15nlake.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "801513956820-m7qhv6dfm54ui48a85g2itisb72c7c3i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.faceRecognitionApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
