@@ -54,20 +54,20 @@ class FaceRecognitionService {
       // this.outputSize = 192;
 
       // For using facenet_512.tflite
-      // this.interpreter = await Interpreter.fromAsset(
-      //   'facenet_512.tflite',
-      //   // options: interpreterOptions
-      // );
-      // this.inputSize = 160;
-      // this.outputSize = 512;
-
-      // // For using facenet.tflite
       this.interpreter = await Interpreter.fromAsset(
-        'facenet.tflite',
+        'facenet_512.tflite',
         // options: interpreterOptions
       );
       this.inputSize = 160;
-      this.outputSize = 128;
+      this.outputSize = 512;
+
+      // // For using facenet.tflite
+      // this.interpreter = await Interpreter.fromAsset(
+      //   'facenet.tflite',
+      //   // options: interpreterOptions
+      // );
+      // this.inputSize = 160;
+      // this.outputSize = 128;
 
       print('---MODEL DETAILS---');
       print(this.interpreter?.getInputTensors());
