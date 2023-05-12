@@ -13,8 +13,8 @@ this is the file run for the environment sensing and the AC flpa part on the Nod
 #include <Adafruit_SSD1306.h>
 
 //wifi authentication parameters
-const char* ssid = "OnePlus Nord";                                            // using my mobile as router here, as nodemcu
-const char* pass = "60774ffe9fde";                                            // will now run on wifi of my mobile's wifi hotspot
+const char* ssid = "";                                            // name of the wifi network being used
+const char* pass = "";                                            // wifi password
 const char* server = "api.thingspeak.com";                                 // cloud server
 WiFiClient client;                                                         // represents this end as a client corresponding to the above server (HTTP used to request)
 #define SCREEN_WIDTH 128                                                   // OLED display width, in pixels
@@ -38,10 +38,10 @@ DHT_Unified temp_humidity_sensor(DHTPIN, DHTTYPE);
 
 
 #include <ThingSpeak.h>
-const char* write_apiKey = "PX70HD36BJ7MACXK";  // write api key of thingspeak cloud server
-const char* read_apiKey = "17J3EX7IDD6YMO9Y";
-unsigned long write_channelID = 2098172;
-unsigned long read_channelID = 2098172;
+const char* write_apiKey = "";  // write api key of thingspeak cloud server
+const char* read_apiKey = "";   // read api key of thingspeak server
+unsigned long write_channelID = ;   // read and write channel IDs of thingspeak channel on which data is present
+unsigned long read_channelID = ;
 
 //Motor
 #include <AccelStepper.h>
@@ -75,7 +75,7 @@ void setup() {  // put your setup code here, to run once:
   delay(10);
   Serial.println("Connecting to ");
   Serial.println(ssid);
-  display.clearDisplay();
+  display.clearDisplay();                       // initialising LED display parameters
   display.setCursor(0, 0);
   display.setTextSize(1);
   display.setTextColor(WHITE);
@@ -91,6 +91,7 @@ void setup() {  // put your setup code here, to run once:
     display.print(".");
     display.display();
   }
+  // setting up OTA, which allows uploading code on the NodeMCU wirelessly 
   ArduinoOTA.setPassword("123");
   ArduinoOTA.onStart([]() {
     String type;
@@ -127,7 +128,7 @@ void setup() {  // put your setup code here, to run once:
   WiFi.persistent(true);
   Serial.println("");
   Serial.println("WiFi connected");
-  display.clearDisplay();
+  display.clearDisplay();                     // displaying wifi connected on the led display
   display.setCursor(0, 0);
   display.setTextSize(2);
   display.setTextColor(WHITE);
@@ -147,7 +148,7 @@ void setup() {  // put your setup code here, to run once:
   Serial.println(CO_sensor.getR0());
 
   temp_humidity_sensor.begin();  // initialise temperature and humidity sensor
-  sensor_t sensor;               // print temperature sensor details on monitor
+  sensor_t sensor;               // print temperature sensor calibration details on monitor
   temp_humidity_sensor.temperature().getSensor(&sensor);
   Serial.println(F("------------------------------------"));
   Serial.println(F("Temperature Sensor"));
@@ -186,7 +187,7 @@ void setup() {  // put your setup code here, to run once:
   Serial.println(F("%"));
   Serial.println(F("------------------------------------"));
 
-  // // set the speed and acceleration
+  // // set the speed and acceleration of motor
   stepper.setMaxSpeed(500);
   stepper.setAcceleration(400);
    pinMode(out,OUTPUT);
@@ -207,13 +208,13 @@ void setup() {  // put your setup code here, to run once:
 void loop() {
   // put your main code here, to run repeatedly:
   count++;
-  ArduinoOTA.handle();
+  ArduinoOTA.handle();        // OTA communication is allowed, but it may not work. OTA allows modifying the code uploaded on the NodeMCU wirelessly having the host uploading the code and the NodeMCU on the same wireless network
   display.clearDisplay();
   display.setCursor(0, 0);
   display.setTextSize(1);
   display.setTextColor(WHITE);
 
-  CO_ppm = CO_sensor.readPpm();  // no error handling required for this, always returns some value
+  CO_ppm = CO_sensor.readPpm(); 
   if (isnan(CO_sensor.readPpm())) {
     Serial.println(F("Error reading CO ppm value"));
   } else {
@@ -234,7 +235,7 @@ void loop() {
 
   // Get humidity event and print its value.
   temp_humidity_sensor.humidity().getEvent(&event);
-  humidity = event.relative_humidity;
+  humidity = event.relative_humidity;                     // reading humidity
   if (isnan(event.relative_humidity)) {
     Serial.println(F("Error reading humidity"));
   } else {
@@ -259,7 +260,7 @@ void loop() {
   //Read temp range from server
   temp_min = ThingSpeak.readFloatField(read_channelID, (unsigned int)6, read_apiKey);
   temp_max = ThingSpeak.readFloatField(read_channelID, (unsigned int)7, read_apiKey);
-  ThingSpeak.readMultipleFields(read_channelID, read_apiKey);
+  ThingSpeak.readMultipleFields(read_channelID, read_apiKey);                               // reading the flap state and the min and max temperature from the server that was last set in the app 
   temp_min = ThingSpeak.getFieldAsFloat(6);
   temp_max = ThingSpeak.getFieldAsFloat(7);
   Serial.println(String(temp_min));
@@ -276,9 +277,9 @@ void loop() {
       display.println("AC opened!");
     }
     while (stepper.distanceToGo() != 0) {
-      stepper.run();
+      stepper.run();                              // making the motor rotate and the flap move
     }
-    if (ThingSpeak.writeField(write_channelID, 5, flap_closed, write_apiKey) != 200) {
+    if (ThingSpeak.writeField(write_channelID, 5, flap_closed, write_apiKey) != 200) {     // writing flap state to Thingspeak channel
       Serial.println(F("Error uploading flap state to ThingSpeak channel\n "));
     }
     digitalWrite(out,0);
@@ -289,16 +290,16 @@ void loop() {
     digitalWrite(out,1);
     if (stepper.distanceToGo() == 0) {
       // stepper.moveTo(-stepper.currentPosition());
-      stepper.move(3.2 * stepsPerRevolution);
+      stepper.move(3.2 * stepsPerRevolution);     // this can be set as you wish for perfect opening and closing action
       Serial.println("AC closed!");
       display.println("AC closed!");
       
     }
     while (stepper.distanceToGo() != 0) {
-      stepper.run();
+      stepper.run();                            // making the motor rotate and the flap move
     }
     digitalWrite(out,0);
-    if (ThingSpeak.writeField(write_channelID, 5, flap_closed, write_apiKey) != 200) {
+    if (ThingSpeak.writeField(write_channelID, 5, flap_closed, write_apiKey) != 200) { // writing flap state to Thingspeak channel
       Serial.println(F("Error uploading flap state to ThingSpeak channel\n "));
     }
     delay(20000);  // thingspeak needs minimum 15s delay between updates
@@ -308,7 +309,7 @@ void loop() {
     ThingSpeak.setField(1, CO_ppm);
     ThingSpeak.setField(3, temp);
     ThingSpeak.setField(4, humidity);
-    if (ThingSpeak.writeFields(write_channelID, write_apiKey) != 200) {
+    if (ThingSpeak.writeFields(write_channelID, write_apiKey) != 200) {       // writing environment-sensed data to Thingspeak channel
       Serial.println(F("Error uploading sensors' data to ThingSpeak channel\n"));
     }
     delay(10000);
