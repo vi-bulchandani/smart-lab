@@ -1,12 +1,12 @@
 # face_recognition_app
 
-A Flutter application to set up the facial recognition, see the environment sensing data update temperature preferences and see the person count and entry logs.
+A Flutter application to set up the facial recognition, see the environment sensing data, update temperature preferences and see the person count and entry logs.
 
 ## Source files
 
 - ```main.dart```: main file of the program
 - `firebase_options.dart`: system generated file
-- `screens/home_page.dart`: contains the home page of the application after signing in. It has 3 tabs: 1. For updating face photo, 2. FOr displaying the environment sensor data and update temperature preferences and 3. displaying the people count and the entry and the exit logs.
+- `screens/home_page.dart`: contains the home page of the application after signing in. It has 3 tabs: 1. For updating face photo, 2. For displaying the environment sensor data and update temperature preferences and 3. displaying the people count and the entry and the exit logs.
 - `screens/register_page.dart`: page for entering personal details after registration.
 - `screens/welcome_page.dart`: welcome page of the applicatiaon containing the Google OAuth button
 - `services/entry_logs.dart`: functions for retrieving the entry logs from firestore
@@ -19,8 +19,10 @@ A Flutter application to set up the facial recognition, see the environment sens
 ## Other files
 
 - `*.tflite`: The facenet models used in the app
-- `*.apk`: Fat apk files of the app corresponding to the different modesl used
-- `install.bat/install.sh`: will download the facenet model and associated files on the computer
+- `*.apk`: Fat apk files of the app corresponding to the different models used
+- `install.bat/install.sh`: will download the facenet model and associated files on the computer.
+
+Note: In case you're changing the source code of the app, first ensure that you run install.bat/install.sh file on your system beforehand. This installs some required files and the models required for the app. This is also required if you're doing a debug run of the app or generating a new apk of the app (say after changing the source code)
   
 ----------------------------------------------------
 
