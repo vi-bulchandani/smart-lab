@@ -14,9 +14,9 @@ The salient features are:
 - allowing entry to only the recognised members of the lab through **face recognition**. We have used the Google Facenet model for this.
 - Real time intrusion detection system at the door
 - Environment Sensing of the Lab
-- Count of people currently in the lab and the entry and exit logs
+- Count of people currently in the lab and the entry and exit logs (this is not yet fully implemented)
 - Using the environment variables to open/close the AC vent based on user preference
-- Android application where you can upload your photo for recognition, see the live environment data and set the temperature preferences
+- Android application where you can upload your photo for recognition, see the live environment data and set the temperature preferences and view entry logs and person count
 
 -------------------------------------------------------------
 ## Materials Used
@@ -37,7 +37,7 @@ The salient features are:
 
 - C++ for Arduino and NodeMCU
 - Python for face recognition
-- Flutter/Dart for the Android application
+- Flutter/Dart and corresponding dependencies for the Android application
 
 --------------------------------------------------------------
 
@@ -55,6 +55,8 @@ The salient features are:
 - This same vector is retrieved from Firestore at regular intervals and used in the facial recognition in pi/laptop running the TFLite model.
 - The app allows you to see the environment sensing history of the Lab through a set of scalable graphs and set the minimum and maximum temperature on the ThingSpeak Channel.
 
+Note: As of now, the entry logs and person count are not being sent to the server from the face recognition host (pi/laptop). But the backend on the server and the app has been implemented. 
+
 -------------------------------------------------------------
 
 ## Purpose of the code files
@@ -66,3 +68,6 @@ The salient features are:
 
 ## Thingspeak channel
 See here [https://thingspeak.com/channels/2098172]
+
+## Manual
+Refer to the manual for technical details of features implemented, problems faced and future improvements possible
