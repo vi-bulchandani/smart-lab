@@ -1,3 +1,7 @@
+/* 
+this is the file run for the environment sensing and the AC flpa part on the NodeMCU
+ */
+
 #include <ESP8266WiFi.h>  // wifi and over the air (OTA) related libraries
 #include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
@@ -8,6 +12,7 @@
 #include <Adafruit_GFX.h>  // for displaying graphics on the display
 #include <Adafruit_SSD1306.h>
 
+//wifi authentication parameters
 const char* ssid = "OnePlus Nord";                                            // using my mobile as router here, as nodemcu
 const char* pass = "60774ffe9fde";                                            // will now run on wifi of my mobile's wifi hotspot
 const char* server = "api.thingspeak.com";                                 // cloud server

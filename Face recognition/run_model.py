@@ -1,3 +1,7 @@
+'''
+This script is run on RaspberryPi to perform face recognition and coordinate with the intrusion detection system.
+'''
+
 from imutils.video import VideoStream #import required for accessing video stream
 from imutils.video import FPS
 import numpy as np # required for model calculation 

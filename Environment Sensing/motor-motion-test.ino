@@ -9,6 +9,8 @@
   copies or substantial portions of the Software.
   
   Based on Stepper Motor Control - one revolution by Tom Igoe
+
+  This is used to test the stepper motor
 */
 
 #include <AccelStepper.h>

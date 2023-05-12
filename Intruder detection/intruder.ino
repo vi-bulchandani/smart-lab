@@ -1,3 +1,6 @@
+/* 
+File for the intrusion detection system using line sensors and arduino 
+*/
 #include<Grove_LED_Bar.h>
 
 // Line sensor pins
