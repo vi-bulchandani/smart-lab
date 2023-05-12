@@ -26,7 +26,7 @@ last_received = ''  #last result from arduino
 recognised = 0  # whether scanned face in known
 state = 0
 count = 0  # number of people in the room
-credentials = service_account.Credentials.from_service_account_file('luminous-shadow-334212-4fcb1265d7f1.json')  # credential file
+credentials = service_account.Credentials.from_service_account_file('luminous-shadow-334212-4fcb1265d7f1.json')  # credential file (provided separately)
 db = firestore.Client(credentials=credentials) #connect to firestore
 
 
@@ -41,7 +41,7 @@ else:
 interpreter = tf.lite.Interpreter(model_path="facenet_512.tflite")
 
 
-def print_to_Arduino(ser):
+def print_to_Arduino(ser):		
   """
   writes the recognized variable in the serial of arduino
   ser: serial object connected to Arduino
