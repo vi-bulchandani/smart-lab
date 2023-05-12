@@ -1,14 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// Importing project packages
+import 'package:face_recognition_app/main.dart';
 import 'package:face_recognition_app/screens/home_page.dart';
 import 'package:face_recognition_app/screens/register_page.dart';
 import 'package:face_recognition_app/utilities/alert.dart';
 import 'package:face_recognition_app/services/entry_logs.dart';
+
+// Importing Firebase packages
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+// Importing other Flutter packages
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:face_recognition_app/main.dart';
+
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -46,6 +52,15 @@ class _WelcomePageState extends State<WelcomePage> {
               ),
             ),
             SizedBox(height: 16.0,),
+
+            // On logging in, the following actions are done in the order:
+            // 1. User is authenticated to Google using google_sign_in package
+            // 2. The credentials obtained are used to authenticate the user using Firebase Authentication
+            // 3. It is determined whether the user is allowed to use the Smart Lab based on data in the 'authorizedUsers' collection in Cloud Firestore
+            // 4. It is determined whether the user is a first time user:
+            //   4a. If yes, user is redirected to Register Page
+            //   4b. If no, user is redirected to Home Page
+            // If any of the above steps fail, error is displayed using showAlert() utility
             SignInButton(
               Buttons.Google,
               onPressed: () async {

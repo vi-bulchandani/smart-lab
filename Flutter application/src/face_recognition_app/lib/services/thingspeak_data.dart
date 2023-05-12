@@ -1,9 +1,12 @@
-import 'dart:convert';
-
+// Importing project packages
 import 'package:face_recognition_app/utilities/alert.dart';
+
+// Importing other Dart and Flutter packages
+import 'dart:convert';
+import 'dart:convert' as convert;
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
+
 
 class ThingspeakData {
 
@@ -26,6 +29,11 @@ String _dataUrl = 'https://thingspeak.com/channels/2098172/feeds.json';
 int minTemp = 0;
 int maxTemp = 0;
 
+// Retrieves data of live environment from the Thingspeak server using HTTP GET request. See https://in.mathworks.com/help/thingspeak/readdata.html for more information
+// Valid data are parsed and populated in data[] array and minTemp, maxTemp variables
+// For live environment, valid data comprises of an item which contains readings for all 3 of CO, Temperature, Humidity levels
+// For AC temperature threshold, valid data comprises of an item which contains readings for both minimum and maximum temperature
+// If the above task fails, error is displayed using the showAlert() utility
 Future<void> getData(BuildContext context) async{
   print('INFO: Request made to Thingspeak Server');
   final response = await http.get(Uri.parse(_dataUrl));
@@ -54,6 +62,8 @@ Future<void> getData(BuildContext context) async{
   }
 }
 
+// Updates the threshold values set by the user from the app to the Thingspeak server using HTTP POST request. See https://in.mathworks.com/help/thingspeak/writedata.html for more information
+// If the above task fails, error is displayed using the showAlert() utility
 Future<void> updateFlapState(int updatedState, BuildContext context) async {
   print('INFO: Sending update to Thingspeak Server');
   var url = 'https://api.thingspeak.com/update';

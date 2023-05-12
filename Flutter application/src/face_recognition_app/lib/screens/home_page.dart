@@ -1,13 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:face_recognition_app/screens/welcome_page.dart';
+// Importing project packages
 import 'package:face_recognition_app/main.dart';
+import 'package:face_recognition_app/screens/welcome_page.dart';
 import 'package:face_recognition_app/services/entry_logs.dart';
 import 'package:face_recognition_app/services/face_recognition.dart';
 import 'package:face_recognition_app/services/sign_up_service.dart';
 import 'package:face_recognition_app/services/thingspeak_data.dart';
 import 'package:face_recognition_app/utilities/alert.dart';
+
+// Importing Firebase packages
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
+// Importing other Dart and Flutter packages
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -17,10 +22,12 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 class HomePage extends StatefulWidget {
 
+  // HomePage can be opened only with a specified emailId and name
+  HomePage({this.name = '', this.email = ''});
+
+  // User Details
   String name;
   String email;
-
-  HomePage({this.name = '', this.email = ''});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -31,10 +38,10 @@ class _HomePageState extends State<HomePage> {
   int _selectedPage = 0;
 
   // Update Images Parameters
-  int _state = 0;
-  late List<File> images = List<File>.filled(10, File(''));
-  List<bool> isUploaded = List<bool>.filled(10, false);
-  final ImagePicker picker = ImagePicker();
+  int _state = 0; // State of the registration form (Stepper Widget)
+  late List<File> images = List<File>.filled(10, File('')); // Image file of user. Initially empty
+  List<bool> isUploaded = List<bool>.filled(10, false); // Boolean variable to check whether user has uploaded image. Initially false
+  final ImagePicker picker = ImagePicker(); // Instance of Image Picker package. Used to take image from camera. See https://pub.dev/packages/image_picker for more details
 
   // Live Environment Parameters
   late ZoomPanBehavior _zoomPanBehavior;
@@ -43,6 +50,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
 
+    // Initializing properties and behaviour of Live Environment Graph rendering widgets. See https://pub.dev/packages/syncfusion_flutter_charts for more details/
     _zoomPanBehavior = ZoomPanBehavior(
       enablePinching: true,
       enableDoubleTapZooming: false
@@ -66,13 +74,20 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
+    // Subscreens on Home Page
     List<Widget> pages = [
+
+      // Update Photo Screen
       (isLoading) ? SpinKitDoubleBounce(
         color: Colors.red,
         size: 48.0,
       ) :
       Stepper(
+
+        // Current state of the update form (Stepper Widget)
         currentStep: _state,
+
+        // On cancelling, the image is un-uploaded.
         onStepCancel: (){
           if (_state >= 0) {
             if(isUploaded[_state]){
@@ -87,6 +102,13 @@ class _HomePageState extends State<HomePage> {
             }
           }
         },
+
+        // On updating, the following actions are done in the order:
+        // 1. It is determined whether the user has uploaded the new image
+        // 2. The image is uploaded to Firebase Storage under 'emailId/' bucket
+        // 3. The image is run on a face recognition model and the data obtained is updated in a document with documentId=faces in the 'metadata' collection of Cloud Firestore
+        // 4. The live environment data of the smart lab is fetched and processed
+        // If any of the above steps fail, error is displayed using showAlert() utility
         onStepContinue: () async {
           if (_state <= 0) {
             setState(() {
@@ -94,12 +116,6 @@ class _HomePageState extends State<HomePage> {
             });
             if(_state == 1){
               _state--;
-              // bool allUploaded = true;
-              // for(bool b in isUploaded){
-              //   if(!b){
-              //     allUploaded = false;
-              //   }
-              // }
               if(isUploaded[0]){
                 setState(() {
                   isLoading = true;
@@ -142,12 +158,15 @@ class _HomePageState extends State<HomePage> {
             }
           }
         },
+
         onStepTapped: (int index) {
           setState(() {
             _state = index;
           });
         },
         steps: [
+
+          // Update Photo Step
           Step(
             title: Text('Photo'),
             content: (!isUploaded[0]) ? Container(
@@ -177,269 +196,10 @@ class _HomePageState extends State<HomePage> {
                 )
             ),
           ),
-          // Step(
-          //   title: Text('Photo 2'),
-          //   content: (!isUploaded[1]) ? Container(
-          //     child: IconButton(
-          //       icon: Icon(
-          //         Icons.camera_alt_rounded,
-          //       ),
-          //       iconSize: 48,
-          //       onPressed: () async {
-          //         try{
-          //           final pickedFile = await picker.getImage(
-          //               source: ImageSource.camera,
-          //               maxHeight: 300.0
-          //           );
-          //           setState(() {
-          //             images[1] = File(pickedFile!.path);
-          //             isUploaded[1] = true;
-          //           });
-          //         } catch (err) {
-          //           print('ERROR: ' + err.toString());
-          //         }
-          //       },
-          //     ),
-          //   ) : Container(
-          //       child: Image(
-          //         image: FileImage(images[1]),
-          //       )
-          //   ),
-          // ),
-          // Step(
-          //   title: Text('Photo 3'),
-          //   content: (!isUploaded[2]) ? Container(
-          //     child: IconButton(
-          //       icon: Icon(
-          //         Icons.camera_alt_rounded,
-          //       ),
-          //       iconSize: 48,
-          //       onPressed: () async {
-          //         try{
-          //           final pickedFile = await picker.getImage(
-          //               source: ImageSource.camera,
-          //               maxHeight: 300.0
-          //           );
-          //           setState(() {
-          //             images[2] = File(pickedFile!.path);
-          //             isUploaded[2] = true;
-          //           });
-          //         } catch (err) {
-          //           print('ERROR: ' + err.toString());
-          //         }
-          //       },
-          //     ),
-          //   ) : Container(
-          //       child: Image(
-          //         image: FileImage(images[2]),
-          //       )
-          //   ),
-          // ),
-          // Step(
-          //   title: Text('Photo 4'),
-          //   content: (!isUploaded[3]) ? Container(
-          //     child: IconButton(
-          //       icon: Icon(
-          //         Icons.camera_alt_rounded,
-          //       ),
-          //       iconSize: 48,
-          //       onPressed: () async {
-          //         try{
-          //           final pickedFile = await picker.getImage(
-          //               source: ImageSource.camera,
-          //               maxHeight: 300.0
-          //           );
-          //           setState(() {
-          //             images[3] = File(pickedFile!.path);
-          //             isUploaded[3] = true;
-          //           });
-          //         } catch (err) {
-          //           print('ERROR: ' + err.toString());
-          //         }
-          //       },
-          //     ),
-          //   ) : Container(
-          //       child: Image(
-          //         image: FileImage(images[3]),
-          //       )
-          //   ),
-          // ),
-          // Step(
-          //   title: Text('Photo 5'),
-          //   content: (!isUploaded[4]) ? Container(
-          //     child: IconButton(
-          //       icon: Icon(
-          //         Icons.camera_alt_rounded,
-          //       ),
-          //       iconSize: 48,
-          //       onPressed: () async {
-          //         try{
-          //           final pickedFile = await picker.getImage(
-          //               source: ImageSource.camera,
-          //               maxHeight: 300.0
-          //           );
-          //           setState(() {
-          //             images[4] = File(pickedFile!.path);
-          //             isUploaded[4] = true;
-          //           });
-          //         } catch (err) {
-          //           print('ERROR: ' + err.toString());
-          //         }
-          //       },
-          //     ),
-          //   ) : Container(
-          //       child: Image(
-          //         image: FileImage(images[4]),
-          //       )
-          //   ),
-          // ),
-          // Step(
-          //   title: Text('Photo 6'),
-          //   content: (!isUploaded[5]) ? Container(
-          //     child: IconButton(
-          //       icon: Icon(
-          //         Icons.camera_alt_rounded,
-          //       ),
-          //       iconSize: 48,
-          //       onPressed: () async {
-          //         try{
-          //           final pickedFile = await picker.getImage(
-          //               source: ImageSource.camera,
-          //               maxHeight: 300.0
-          //           );
-          //           setState(() {
-          //             images[5] = File(pickedFile!.path);
-          //             isUploaded[5] = true;
-          //           });
-          //         } catch (err) {
-          //           print('ERROR: ' + err.toString());
-          //         }
-          //       },
-          //     ),
-          //   ) : Container(
-          //       child: Image(
-          //         image: FileImage(images[5]),
-          //       )
-          //   ),
-          // ),
-          // Step(
-          //   title: Text('Photo 7'),
-          //   content: (!isUploaded[6]) ? Container(
-          //     child: IconButton(
-          //       icon: Icon(
-          //         Icons.camera_alt_rounded,
-          //       ),
-          //       iconSize: 48,
-          //       onPressed: () async {
-          //         try{
-          //           final pickedFile = await picker.getImage(
-          //               source: ImageSource.camera,
-          //               maxHeight: 300.0
-          //           );
-          //           setState(() {
-          //             images[6] = File(pickedFile!.path);
-          //             isUploaded[6] = true;
-          //           });
-          //         } catch (err) {
-          //           print('ERROR: ' + err.toString());
-          //         }
-          //       },
-          //     ),
-          //   ) : Container(
-          //       child: Image(
-          //         image: FileImage(images[6]),
-          //       )
-          //   ),
-          // ),
-          // Step(
-          //   title: Text('Photo 8'),
-          //   content: (!isUploaded[7]) ? Container(
-          //     child: IconButton(
-          //       icon: Icon(
-          //         Icons.camera_alt_rounded,
-          //       ),
-          //       iconSize: 48,
-          //       onPressed: () async {
-          //         try{
-          //           final pickedFile = await picker.getImage(
-          //               source: ImageSource.camera,
-          //               maxHeight: 300.0
-          //           );
-          //           setState(() {
-          //             images[7] = File(pickedFile!.path);
-          //             isUploaded[7] = true;
-          //           });
-          //         } catch (err) {
-          //           print('ERROR: ' + err.toString());
-          //         }
-          //       },
-          //     ),
-          //   ) : Container(
-          //       child: Image(
-          //         image: FileImage(images[7]),
-          //       )
-          //   ),
-          // ),
-          // Step(
-          //   title: Text('Photo 9'),
-          //   content: (!isUploaded[8]) ? Container(
-          //     child: IconButton(
-          //       icon: Icon(
-          //         Icons.camera_alt_rounded,
-          //       ),
-          //       iconSize: 48,
-          //       onPressed: () async {
-          //         try{
-          //           final pickedFile = await picker.getImage(
-          //               source: ImageSource.camera,
-          //               maxHeight: 300.0
-          //           );
-          //           setState(() {
-          //             images[8] = File(pickedFile!.path);
-          //             isUploaded[8] = true;
-          //           });
-          //         } catch (err) {
-          //           print('ERROR: ' + err.toString());
-          //         }
-          //       },
-          //     ),
-          //   ) : Container(
-          //       child: Image(
-          //         image: FileImage(images[8]),
-          //       )
-          //   ),
-          // ),
-          // Step(
-          //   title: Text('Photo 10'),
-          //   content: (!isUploaded[9]) ? Container(
-          //     child: IconButton(
-          //       icon: Icon(
-          //         Icons.camera_alt_rounded,
-          //       ),
-          //       iconSize: 48,
-          //       onPressed: () async {
-          //         try{
-          //           final pickedFile = await picker.getImage(
-          //               source: ImageSource.camera,
-          //               maxHeight: 300.0
-          //           );
-          //           setState(() {
-          //             images[9] = File(pickedFile!.path);
-          //             isUploaded[9] = true;
-          //           });
-          //         } catch (err) {
-          //           print('ERROR: ' + err.toString());
-          //         }
-          //       },
-          //     ),
-          //   ) : Container(
-          //       child: Image(
-          //         image: FileImage(images[9]),
-          //       )
-          //   ),
-          // )
         ],
       ),
+
+      // Live Environment Screen
       (isLoading) ? SpinKitDoubleBounce(
         color: Colors.red,
         size: 48.0,
@@ -449,8 +209,10 @@ class _HomePageState extends State<HomePage> {
         thickness: 22.0,
         interactive: true,
         child: ListView(
-          // shrinkWrap: true,
           children: [
+
+            // Update AC Temperature Threshold Panel
+            // NOTE: The UI is such that MIN can never be >= MAX. Further, MIN >= 10 and MAX <= 40 always
             Container(
               height: MediaQuery.of(context).size.height / 2,
               decoration: BoxDecoration(
@@ -578,32 +340,8 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      // FloatingActionButton(
-                      //   backgroundColor: Colors.green,
-                      //   onPressed: () async{
-                      //     setState(() {
-                      //       isLoading = true;
-                      //     });
-                      //     await updateFlapState(1, context).catchError((err) {
-                      //       setState(() {
-                      //         isLoading = false;
-                      //       });
-                      //       showAlert(context, err.toString());
-                      //     });
-                      //     await getData(context).catchError((err) {
-                      //       showAlert(context, err.toString());
-                      //       setState(() {
-                      //         isLoading = false;
-                      //       });
-                      //     });
-                      //     setState(() {
-                      //       isLoading = false;
-                      //     });
-                      //   },
-                      //   child: Text(
-                      //     'ON'
-                      //   ),
-                      // ),
+                      // Updates the temperature threshold by sending updated values to Thingspeak Server
+                      // If the above steps fail, error is displayed using showAlert() utility
                       FloatingActionButton(
                         backgroundColor: Colors.amber,
                         onPressed: () async{
@@ -631,37 +369,13 @@ class _HomePageState extends State<HomePage> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      // FloatingActionButton(
-                      //   backgroundColor: Colors.red,
-                      //   onPressed: () async{
-                      //     setState(() {
-                      //       isLoading = true;
-                      //     });
-                      //     await updateFlapState(0, context).catchError((err) {
-                      //       setState(() {
-                      //         isLoading = false;
-                      //       });
-                      //       showAlert(context, err.toString());
-                      //     });
-                      //     await getData(context).catchError((err) {
-                      //       showAlert(context, err.toString());
-                      //       setState(() {
-                      //         isLoading = false;
-                      //       });
-                      //     });
-                      //     setState(() {
-                      //       isLoading = false;
-                      //     });
-                      //   },
-                      //   child: Text(
-                      //     'OFF'
-                      //   ),
-                      // ),
                     ],
                   )
                 ],
               ),
             ),
+
+            // Graph of Carbon Monoxide levels
             Container(
               height: MediaQuery.of(context).size.height / 3,
               child: SfCartesianChart(
@@ -687,31 +401,8 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            // Container(
-            //   height: MediaQuery.of(context).size.height / 3,
-            //   child: SfCartesianChart(
-            //     primaryXAxis: CategoryAxis(
-            //         title: AxisTitle(
-            //             text: 'Timestamp'
-            //         )
-            //     ),
-            //     primaryYAxis: NumericAxis(
-            //         title: AxisTitle(
-            //             text: 'MQ5 (ppm)'
-            //         )
-            //     ),
-            //     zoomPanBehavior: _zoomPanBehavior,
-            //     trackballBehavior: _trackballBehavior,
-            //     margin: EdgeInsets.all(24.0),
-            //     series: [
-            //       LineSeries(
-            //           dataSource: data,
-            //           xValueMapper: (ThingspeakData info, _) => info.timestamp.toLocal().toString(),
-            //           yValueMapper: (ThingspeakData info, _) => info.field2
-            //       )
-            //     ],
-            //   ),
-            // ),
+
+            // Graph of Temperature levels
             Container(
               height: MediaQuery.of(context).size.height / 3,
               child: SfCartesianChart(
@@ -740,6 +431,8 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+
+            // Graph of Humidity levels
             Container(
               height: MediaQuery.of(context).size.height / 3,
               child: SfCartesianChart(
@@ -771,6 +464,8 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+
+      // Entry Logs Screen
       (isLoading) ? SpinKitDoubleBounce(
         color: Colors.red,
         size: 48.0,
@@ -805,6 +500,8 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   SizedBox(height: 16.0,),
+
+                  // Dynamically creates widgets for entries based on retrieved data from Cloud Firestore
                   ListView.builder(
                     shrinkWrap: true,
                     itemCount: entryLogs.length,
@@ -844,6 +541,11 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: [
+
+          // Refresh Button
+          // 1. For update photo screen, the uploaded image is resetted to null
+          // 2. For live environment screen, the data from Thingspeak is retrieved live again, the UI of AC Temperature is resetted to last state
+          // 3. For entry logs screen, the data of entries is retrieved from Cloud Firestore live again
           IconButton(
             icon: Icon(
               Icons.refresh_rounded,
@@ -874,6 +576,9 @@ class _HomePageState extends State<HomePage> {
               }
             },
           ),
+
+          // Logout Button
+          // Firebase Auth Logout is performed followed by resetting of local storage on SharedPreferences
           IconButton(
             icon: Icon(
               Icons.logout_rounded,
@@ -890,7 +595,10 @@ class _HomePageState extends State<HomePage> {
           'Hello, ' + this.widget.name + '!'
         ),
       ),
+
       body:  pages[_selectedPage],
+
+      // BottomNavigationBar handles various subscrens on one screen
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.shifting,
         currentIndex: _selectedPage,

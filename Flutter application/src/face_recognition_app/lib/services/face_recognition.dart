@@ -1,18 +1,20 @@
-import 'dart:io';
+// Importing project packages
+import 'package:face_recognition_app/utilities/alert.dart';
+
+// Importing other Dart and Flutter packages
 import 'dart:async';
 import 'dart:typed_data';
-import 'package:face_recognition_app/utilities/alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image/image.dart' as img;
 import 'face_detection.dart';
 
+// Service for recognizing face from a cropped face detected image using TFlite models
 class FaceRecognitionService {
 
   final FaceDetectionService faceDetectionService;
   final BuildContext context;
-  Interpreter? interpreter;
-  double threshold = 0.5;
+  Interpreter? interpreter; // Internal process which runs the TFlite model on input to produce output
   late int inputSize;
   late int outputSize;
   late List imageVector;
@@ -20,43 +22,23 @@ class FaceRecognitionService {
 
   FaceRecognitionService({required this.faceDetectionService, required this.context});
 
+  // One of the models is loaded appropriately to the Interpreter process, and model I/O configurations are printed
+  // The TFlite models are stored as project assets using 'pubspec.yaml'
+  // In case the model fails to load, error is displayed using the showAlert() utility
   Future<void> initialize() async {
     late Delegate delegate;
     try {
-      // if(Platform.isAndroid){
-      //   delegate = GpuDelegateV2(
-      //     options: GpuDelegateOptionsV2(
-      //       isPrecisionLossAllowed: false,
-      //       inferencePreference: TfLiteGpuInferenceUsage.fastSingleAnswer,
-      //       inferencePriority1: TfLiteGpuInferencePriority.minLatency,
-      //       inferencePriority2: TfLiteGpuInferencePriority.auto,
-      //       inferencePriority3: TfLiteGpuInferencePriority.auto
-      //     )
-      //   );
-      // }
-      // else if(Platform.isIOS){
-      //   delegate = GpuDelegate(
-      //     options: GpuDelegateOptions(
-      //       allowPrecisionLoss: true,
-      //       waitType: TFLGpuDelegateWaitType.active
-      //     )
-      //   );
-      // }
-      //
-      // var interpreterOptions = InterpreterOptions()..addDelegate(delegate);
 
       // // For using mobilefacenet.tflite
       // this.interpreter = await Interpreter.fromAsset(
       //   'mobilefacenet.tflite',
-      //   // options: interpreterOptions
       // );
       // this.inputSize = 112;
       // this.outputSize = 192;
 
-      // For using facenet_512.tflite
+      // For using facenet_512.tflite (Recommended)
       this.interpreter = await Interpreter.fromAsset(
         'facenet_512.tflite',
-        // options: interpreterOptions
       );
       this.inputSize = 160;
       this.outputSize = 512;
@@ -64,7 +46,6 @@ class FaceRecognitionService {
       // // For using facenet.tflite
       // this.interpreter = await Interpreter.fromAsset(
       //   'facenet.tflite',
-      //   // options: interpreterOptions
       // );
       // this.inputSize = 160;
       // this.outputSize = 128;
@@ -78,12 +59,14 @@ class FaceRecognitionService {
     }
   }
 
+  // The cropped face detected image is processed to an accepted model input format
   void processImage() {
-    // For mobilefacenet.tflite
     img.Image resizedImage = img.copyResizeCropSquare(faceDetectionService.processedImage, size: this.inputSize);
     imageVector = imageToByteListFloat32(resizedImage);
   }
 
+  // A vector of floating RBG pixel values are obtained from the cropped face detected image
+  // The size of the vector is as per input configuration of the chosen model
   Float32List imageToByteListFloat32(img.Image image){
     var convertedBytes = Float32List(1 * this.inputSize * this.inputSize * 3);
     var buffer = Float32List.view(convertedBytes.buffer);
@@ -101,6 +84,7 @@ class FaceRecognitionService {
     return convertedBytes.buffer.asFloat32List();
   }
 
+  // The interpreter takes the RBG pixel vector as input. Runs the model. Produces the face vector as output
   void predictFace() {
     List input = this.imageVector;
     input = input.reshape([1, this.inputSize, this.inputSize, 3]);
