@@ -1,6 +1,7 @@
 # face_recognition_app
 
 A Flutter application to set up the facial recognition, see the environment sensing data, update temperature preferences and see the person count and entry logs.
+To run the app, simply download and install one of the two apk files provided on your Android phone.
 
 ## Source files
 
@@ -12,7 +13,7 @@ A Flutter application to set up the facial recognition, see the environment sens
 - `services/entry_logs.dart`: functions for retrieving the entry logs from firestore
 - `services/face_detection.dart`: functions for retrieving the face in uploaded photo
 - `services/face_recognition.dart`: uses TFLite model to calculate the face embeddings of the detected face and update them in the firestore
-- `services/thingspeak_data.dart`: gets and posts data from/to the ThingSpeak channel
+- `services/thingspeak_data.dart`: gets and posts data from/to the ThingSpeak channel (for env sensing data)
 - `services/sign_ip_service.dart`: for registering a new user on the firebase
 - `utilities/alert.dart`: contains functions for displaying an alert dialog box
 
