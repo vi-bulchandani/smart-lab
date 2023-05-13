@@ -45,8 +45,8 @@ unsigned long read_channelID = ;
 
 //Motor
 #include <AccelStepper.h>
-const int stepsPerRevolution = 2048;  // change this to fit the number of steps per revolution
-
+const int stepsPerRevolution = 2048; 
+const int adjustment = 3.2;            // change this to adjust how much the motor rotates
 // ULN2003 Motor Driver Pins
 #define IN1 D5
 #define IN2 D6
@@ -190,7 +190,7 @@ void setup() {  // put your setup code here, to run once:
   // // set the speed and acceleration of motor
   stepper.setMaxSpeed(500);
   stepper.setAcceleration(400);
-   pinMode(out,OUTPUT);
+  pinMode(out,OUTPUT);
 
   flap_closed = ThingSpeak.readFloatField(read_channelID, (unsigned int)5, read_apiKey);
   //This loop is only to sync the flap position at the time of installation and the ac flap position stored on the cloud.
@@ -290,7 +290,7 @@ void loop() {
     digitalWrite(out,1);
     if (stepper.distanceToGo() == 0) {
       // stepper.moveTo(-stepper.currentPosition());
-      stepper.move(3.2 * stepsPerRevolution);     // this can be set as you wish for perfect opening and closing action
+      stepper.move(adjustment * stepsPerRevolution);     // this can be set as you wish for perfect opening and closing action
       Serial.println("AC closed!");
       display.println("AC closed!");
       
