@@ -53,18 +53,20 @@ The salient features are:
 - This is done by a gear assembly which is driven by the Stepper motor connected to the NodeMCU.
 - The app allows an authorised user to login and update his/her face image which in turn is processed through a TFLite model (Facenet) to convert to face embeddings vector. 
 - This same vector is retrieved from Firestore at regular intervals and used in the facial recognition in pi/laptop running the TFLite model.
-- The app allows you to see the environment sensing history of the Lab through a set of scalable graphs and set the minimum and maximum temperature on the ThingSpeak Channel.
-
+- The app allows you to see the environment sensing history of the Lab through a set of scalable graphs and set the minimum and maximum temperature on the ThingSpeak Channel (shown below).
+![WhatsApp Image 2023-08-26 at 10 16 59](https://github.com/vi-bulchandani/smart-lab/assets/73881267/053cf0d0-e0a3-4d4f-a695-4b515d7387a7)
+![WhatsApp Image 2023-08-26 at 10 17 01](https://github.com/vi-bulchandani/smart-lab/assets/73881267/526df150-4b69-4ad9-a384-4c7eb3f19128)
 Note: As of now, the entry logs and person count are not being sent to the server from the face recognition host (pi/laptop). But the backend on the server and the app has been implemented. 
 
 -------------------------------------------------------------
+
 
 ## Purpose of the code files
 
 - ```env.ino, motor-motion-test.ino``` are the files for the environment sensing and AC vent controller part to be use with the NodeMCU. The second file is just a test file to check working of the stepper motor.
 - ``` Face Recognition/``` This folder contains the tflite models and the python script that runs the face recognition and connects to intrusion detection system using pySerial and TFLite library.
 - ``` Flutter application/ ```: contains the android application developed through flutter. For further details see the README in the application folder. 
--```Intruder/intruder.ino```: code uploaded to the arduino which monitors the line sensors and communicates to the RaspberryPi/laptop
+- ```Intruder/intruder.ino```: code uploaded to the arduino which monitors the line sensors and communicates to the RaspberryPi/laptop
 
 ## Thingspeak channel
 See here [https://thingspeak.com/channels/2098172]
