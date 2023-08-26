@@ -51,12 +51,12 @@ The salient features are:
 - The environment sensing module is connected to the NodeMCU and it collects the environment data and sends to the Thingspeak Channel at regular intervals. 
 - It also reads the min. and max. temp. from the channel and closes/opens the AC vent flap accordingly (if ambient temperature goes below the set min temperature, the vent flap gets closed, if it goes above the set max temperature, it gets opened.
 - This is done by a gear assembly which is driven by the Stepper motor connected to the NodeMCU.
-- The app allows an authorised user to login and update his/her face image which in turn is processed through a TFLite model (Facenet) to convert to face embeddings vector (see below).
-- ![WhatsApp Image 2023-08-26 at 10 25 22](https://github.com/vi-bulchandani/smart-lab/assets/73881267/4d5b099f-f09c-4752-be4b-78f9dfea21e8)
+- The app allows an authorised user to login and update his/her face image which in turn is processed through a TFLite model (Facenet) to convert to face embeddings vector (see below).\
+![WhatsApp Image 2023-08-26 at 10 25 22](https://github.com/vi-bulchandani/smart-lab/assets/73881267/4d5b099f-f09c-4752-be4b-78f9dfea21e8)\
 - This same vector is retrieved from Firestore at regular intervals and used in the facial recognition in pi/laptop running the TFLite model.
-- The app allows you to see the environment sensing history of the Lab through a set of scalable graphs and set the minimum and maximum temperature on the ThingSpeak Channel (see below).
-- ![WhatsApp Image 2023-08-26 at 10 16 59](https://github.com/vi-bulchandani/smart-lab/assets/73881267/053cf0d0-e0a3-4d4f-a695-4b515d7387a7)
-- ![WhatsApp Image 2023-08-26 at 10 17 01](https://github.com/vi-bulchandani/smart-lab/assets/73881267/526df150-4b69-4ad9-a384-4c7eb3f19128)
+- The app allows you to see the environment sensing history of the Lab through a set of scalable graphs and set the minimum and maximum temperature on the ThingSpeak Channel (see below).\
+![WhatsApp Image 2023-08-26 at 10 16 59](https://github.com/vi-bulchandani/smart-lab/assets/73881267/053cf0d0-e0a3-4d4f-a695-4b515d7387a7)\
+![WhatsApp Image 2023-08-26 at 10 17 01](https://github.com/vi-bulchandani/smart-lab/assets/73881267/526df150-4b69-4ad9-a384-4c7eb3f19128)\
 Note: As of now, the entry logs and person count are not being sent to the server from the face recognition host (pi/laptop). But the backend on the server and the app has been implemented. 
 
 -------------------------------------------------------------
